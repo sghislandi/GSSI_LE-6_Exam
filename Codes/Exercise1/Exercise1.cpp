@@ -1,10 +1,10 @@
 //c++ -o  Exercise1 Exercise1.cpp `root-config --glibs --cflags`
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
+#include <ctime>
 #include "TH1F.h"
 #include "TF1.h"
 #include "TApplication.h"
@@ -22,9 +22,10 @@ int MINSTD(int number){
 }
 
 int main(){
-    gStyle->SetOptStat(0000);
+    gStyle->SetOptStat("e");
     TApplication * App = new TApplication("T",0,NULL);
     TCanvas * c = new TCanvas();
+    TCanvas * c1 = new TCanvas();
 
     //First simple generator part
     unsigned int seed = 987654321;
@@ -37,29 +38,39 @@ int main(){
     TH1F * h1 = new TH1F("Uniform Distribution (First 1000 events)", "Uniform Distribution (First 1000 events)", nBin, 0, 1);
     TH1F * h2 = new TH1F("Uniform Distribution (First 1000000 events)", "Uniform Distribution (First 1000000 events)", nBin, 0, 1);
 
+    //Compute the CPU time
+    clock_t c_start = clock();
+    while(true){
+        extractedNumber = Iteration(extractedNumber);
+        if(extractedNumber == seed) break;
+    }
+    clock_t c_end = clock();
+    cout << "Time needed to complete the whole extraction period: " << (double) (c_end-c_start) / CLOCKS_PER_SEC << " seconds" << endl;
+
+    extractedNumber = seed;
     while(true){
         extractedNumber = Iteration(extractedNumber);
         iterationNumber ++;
         h->Fill((double) extractedNumber / period);
-        if(iterationNumber < 1000){ h1->Fill((double) extractedNumber / period); }
-        if(iterationNumber < 1000000){ h2->Fill((double) extractedNumber / period); }
+        if(iterationNumber <= 1000){ h1->Fill((double) extractedNumber / period); }
+        if(iterationNumber <= 1000000){ h2->Fill((double) extractedNumber / period); }
         if(extractedNumber == seed) break;
     }
 
     cout << "You reobtained the seed after " << iterationNumber << " iterations" << endl;
 
     //Plots
-    c->Divide(1,3);
-    c->cd(1);
+    c->cd();
     h->SetLineColor(9);
     h->SetLineWidth(2);
     h->SetFillStyle(3003);
     h->SetFillColor(4);
-    h->GetYaxis()->SetRangeUser(2683000, 2685000);
+    h->GetYaxis()->SetRangeUser(10700000, 10750000);
     h->GetYaxis()->SetTitle("Counts");
     h->Draw();
 
-    c->cd(2);
+    c1->Divide(1,2);
+    c1->cd(1);
     h1->SetLineColor(9);
     h1->SetLineWidth(2);
     h1->SetFillStyle(3003);
@@ -67,7 +78,7 @@ int main(){
     h1->GetYaxis()->SetTitle("Counts");
     h1->Draw();
 
-    c->cd(3);
+    c1->cd(2);
     h2->SetLineColor(9);
     h2->SetLineWidth(2);
     h2->SetFillStyle(3003);
@@ -77,6 +88,8 @@ int main(){
 
     c->SaveAs("SimpleGenerator.root");
     c->SaveAs("SimpleGenerator.pdf");
+    c1->SaveAs("SimpleGenerator1.root");
+    c1->SaveAs("SimpleGenerator1.pdf");
 
     
     
