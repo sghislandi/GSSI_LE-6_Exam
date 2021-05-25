@@ -10,6 +10,7 @@
 #include "TApplication.h"
 #include "TCanvas.h"
 #include "TStyle.h"
+#include <Math/ProbFuncMathCore.h>
 
 using namespace std;
 
@@ -19,6 +20,16 @@ int Iteration(int number){
 
 int MINSTD(int number){
     return number;
+}
+
+double getChiSquare(TH1F * graph, int nBin){
+    double nEntries = graph->GetEntries();
+    double chiSquare = 0;
+    double expectedCounts = (double) nEntries / nBin;
+    for(int i=1; i<=nBin; i++){
+        chiSquare += (double) pow(graph->GetBinContent(i) - expectedCounts ,2) / expectedCounts;
+    }
+    return chiSquare;
 }
 
 int main(){
@@ -91,8 +102,32 @@ int main(){
     c1->SaveAs("SimpleGenerator1.root");
     c1->SaveAs("SimpleGenerator1.pdf");
 
+    //Chi square test
+    double chiSquare, chiSquare1, chiSquare2;
+    double pValue, pValue1, pValue2;
+
+    chiSquare = getChiSquare(h, nBin);
+    pValue = 1-ROOT::Math::chisquared_cdf(chiSquare, nBin-1);
+    cout << "***FIT RESULTS (All events)*************\n"
+         << "Chi square: " << chiSquare << endl
+         << "d.o.f.: " << nBin-1 << endl
+         << "p-value: " << pValue << endl << endl;
     
-    
+
+    chiSquare1 = getChiSquare(h1, nBin);
+    pValue1 = 1-ROOT::Math::chisquared_cdf(chiSquare1, nBin-1);
+    cout << "***FIT RESULTS (1000 entries)*************\n"
+         << "Chi square: " << chiSquare1 << endl
+         << "d.o.f.: " << nBin-1 << endl
+         << "p-value: " << pValue1 << endl << endl;
+
+    chiSquare2 = getChiSquare(h2, nBin);
+    pValue2 = 1-ROOT::Math::chisquared_cdf(chiSquare2, nBin-1);
+    cout << "***FIT RESULTS (1000000 entries)*************\n"
+         << "Chi square: " << chiSquare2 << endl
+         << "d.o.f.: " << nBin-1 << endl
+         << "p-value: " << pValue2 << endl << endl;
+
     //MINSTD generation part
 
 
