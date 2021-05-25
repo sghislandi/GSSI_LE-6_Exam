@@ -14,12 +14,12 @@
 
 using namespace std;
 
-int Iteration(int number){
+int Iteration(unsigned int number){
     return number*663608941;
 }
 
-int MINSTD(int number){
-    return number;
+int MINSTD(int a, int periodMINSTD, long int number){
+    return (a * number) % periodMINSTD;
 }
 
 double getChiSquare(TH1F * graph, int nBin){
@@ -128,9 +128,26 @@ int main(){
          << "d.o.f.: " << nBin-1 << endl
          << "p-value: " << pValue2 << endl << endl;
 
+
+/***********************************************************************/
     //MINSTD generation part
+    int a = 16807;      //pow(7,5)
+    int periodMINSTD = 2147483647;      //pow(2,31) - 1
+    vector<long int> seedMINSTD = {23353, 3432, 43543821};
+    long int extractedNumberMINSTD;
+    long int extractionLength;
 
-
+    for(int seedIndex=0; seedIndex < seedMINSTD.size(); seedIndex++){
+        extractedNumberMINSTD = seedMINSTD[seedIndex];
+        extractionLength = 0;
+        while(true){
+            extractedNumberMINSTD =  MINSTD(a, periodMINSTD, extractedNumberMINSTD);
+            extractionLength ++;
+            if(extractedNumberMINSTD == seedMINSTD[seedIndex]){break;}
+        }        
+        cout << "Length with seed = " << seedMINSTD[seedIndex] << " is: " << extractionLength << endl;
+        
+    }
 
     App->Run();
 
