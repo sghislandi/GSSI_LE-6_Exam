@@ -24,12 +24,12 @@ int main(){
 
     int nExtraction = 10e6;
     int nBin = 10e3;
-    double minAngle = 0;
-    double maxAngle = 20;
+    double minX = 0;
+    double maxX = 20;
     double extractedNumber;
     TRandom3 random_variable;
 
-    TH1F * h = new TH1F("Rutherford Distribution", "Rutherford Distribution", nBin, minAngle, maxAngle);
+    TH1F * h = new TH1F("Rutherford Distribution", "Rutherford Distribution", nBin, minX, maxX);
     for(int i=0; i<nExtraction; i++){
         extractedNumber = random_variable.Rndm();
         h->Fill(inverseCdf(extractedNumber));
@@ -41,6 +41,8 @@ int main(){
     h->SetFillStyle(3003);
     h->SetFillColor(4);
     h->GetYaxis()->SetTitle("Counts");
+    h->GetYaxis()->SetTitleOffset(1.5);
+    h->GetXaxis()->SetTitle("x");
     h->Draw();
 
     c->SaveAs("Rutherford.root");
