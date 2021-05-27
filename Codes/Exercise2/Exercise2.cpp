@@ -20,8 +20,10 @@ double inverseCdf(double x){
 int main(){
     gStyle->SetOptStat(0000);
     TApplication * App = new TApplication("T",0,NULL);
-    TCanvas * c = new TCanvas();
 
+    //First part of Exercise2: small angle Rutherford distribution
+    TCanvas * c = new TCanvas();
+    
     int nExtraction = 10e6;
     int nBin = 10e3;
     double minX = 0;
@@ -49,8 +51,6 @@ int main(){
     c->SaveAs("Rutherford.pdf");
 
 
-
     App->Run();
-
     return 0;
 }
