@@ -1,0 +1,33 @@
+{
+//========= Macro generated from object: Results/Results
+//========= by ROOT version6.16/00
+   
+   TH1F *Results__1 = new TH1F("Results__1","Results",7,-3.5,3.5);
+   Results__1->SetBinContent(1,380);
+   Results__1->SetBinContent(3,257);
+   Results__1->SetBinContent(5,223);
+   Results__1->SetBinContent(7,140);
+   Results__1->SetMinimum(0);
+   Results__1->SetMaximum(480);
+   Results__1->SetEntries(1000);
+   Results__1->SetFillColor(4);
+   Results__1->SetFillStyle(3003);
+   Results__1->SetLineColor(9);
+   Results__1->SetLineWidth(2);
+   Results__1->GetXaxis()->SetRange(0,8);
+   Results__1->GetXaxis()->SetLabelFont(42);
+   Results__1->GetXaxis()->SetLabelSize(0.035);
+   Results__1->GetXaxis()->SetTitleSize(0.035);
+   Results__1->GetXaxis()->SetTitleOffset(1);
+   Results__1->GetXaxis()->SetTitleFont(42);
+   Results__1->GetYaxis()->SetLabelFont(42);
+   Results__1->GetYaxis()->SetLabelSize(0.035);
+   Results__1->GetYaxis()->SetTitleSize(0.035);
+   Results__1->GetYaxis()->SetTitleFont(42);
+   Results__1->GetZaxis()->SetLabelFont(42);
+   Results__1->GetZaxis()->SetLabelSize(0.035);
+   Results__1->GetZaxis()->SetTitleSize(0.035);
+   Results__1->GetZaxis()->SetTitleOffset(1);
+   Results__1->GetZaxis()->SetTitleFont(42);
+   Results__1->Draw("");
+}

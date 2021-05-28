@@ -8,11 +8,9 @@
 
 #include "TApplication.h"
 #include "TCanvas.h"
-#include "TStyle.h"
 #include "TGraph.h"
 #include "TAxis.h"
 #include "TH1F.h"
-#include "TF1.h"
 
 using namespace std;
 
@@ -48,7 +46,7 @@ int main(){
     TCanvas * c = new TCanvas();
 
     int nDice = 3;
-    int nRounds = 1000000;
+    int nRounds = 1000;
     int attackerResult;
     double armyWonByAttacker = 0;
     double armyLostByAttacker = 0;
@@ -81,6 +79,7 @@ int main(){
     hResults->GetYaxis()->SetRangeUser(0, hResults->GetMaximum() + nRounds/10);
     hResults->GetXaxis()->SetRangeUser(scoreMin-1, scoreMax+1);
     hResults->Draw();
+    hResults->SaveAs("AttackerResults.pdf");
 
 
 
