@@ -21,9 +21,8 @@ int rollDice(){
     return random() % 6 + 1;
 }
 
-double round(){
+double round(int nDice){
     
-    int nDice = 3;
     int attackerScore = 0;
     vector<int> outcomeA(nDice,0);
     vector<int> outcomeD(nDice,0);
@@ -45,19 +44,32 @@ double round(){
 
 
 int main(){
+    TApplication * App = new TApplication("T",0,NULL);
+    TCanvas * c = new TCanvas();
 
-    int nRounds = 2;
+    int nDice = 3;
+    int nRounds = 10;
     int attackerResult;
-    double attackerWinAverage = 0;
 
+    int nBin = nDice + 1;
+    double scoreMin = (double) -0.5 - nDice;
+    double scoreMax = (double) +0.5 + nDice; 
+
+    TH1F* hResults = new TH1F("Results", "Results", nBin, scoreMin, scoreMax);
     for(int i=0; i<nRounds; i++){
         cout << "***Round " << i << "***" << endl;
-        attackerResult = round();
-        attackerWinAverage += attackerResult;
+        attackerResult = round(nDice);
+        hResults->Fill(attackerResult);
         cout << "Result: " << attackerResult << endl; 
     }
 
 
+    c->cd();
+    hResults->Draw();
 
+
+
+
+    App->Run();
     return 0;
 }
