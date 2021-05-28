@@ -35,7 +35,6 @@ double round(int nDice){
     for(int i=0; i<nDice; i++){
         //cout << outcomeA[i] << "\t" << outcomeD[i] << endl;
         if(outcomeA[i] > outcomeD[i]){attackerScore++;}
-        else{attackerScore--;}
     }
     return attackerScore;
 }
@@ -46,30 +45,26 @@ int main(){
     TCanvas * c = new TCanvas();
 
     int nDice = 3;
-    int nRounds = 1000;
+    int nRounds = 100000;
     int attackerResult;
     double armyWonByAttacker = 0;
-    double armyLostByAttacker = 0;
 
-    int nBin = 2*nDice + 1;
-    double scoreMin = (double) -0.5 - nDice;
+    int nBin = nDice + 1;
+    double scoreMin = (double) -0.5;
     double scoreMax = (double) +0.5 + nDice; 
 
-    TH1F* hResults = new TH1F("Results", "Results", nBin, scoreMin, scoreMax);
+    TH1F* hResults = new TH1F("Resutls", "Army won by the attacker", nBin, scoreMin, scoreMax);
     for(int i=0; i<nRounds; i++){
         //cout << "***Round " << i << "***" << endl;
         attackerResult = round(nDice);
         hResults->Fill(attackerResult);
         if(attackerResult>0){armyWonByAttacker += attackerResult;}
-        else{armyLostByAttacker -= attackerResult;}
         //cout << "Result: " << attackerResult << endl; 
     }
 
     cout << "\n******ATTACKER STATISTICS******\n";
     cout << "Average number of army won (per round): " << (double) armyWonByAttacker / nRounds << endl;
     cout << "Average number of army won (per dice): " << (double) armyWonByAttacker / nRounds / nDice << endl;
-    cout << "Average number of army lost (per round): " << (double) armyLostByAttacker / nRounds << endl;
-    cout << "Average number of army lost (per dice): " << (double) armyLostByAttacker / nRounds / nDice << endl;
 
     c->cd();
     hResults->SetLineColor(9);
