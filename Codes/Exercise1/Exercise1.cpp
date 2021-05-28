@@ -58,6 +58,7 @@ int main(){
     clock_t c_end = clock();
     cout << "Time needed to complete the whole extraction period: " << (double) (c_end-c_start) / CLOCKS_PER_SEC << " seconds" << endl;
 
+    //Compute period and histogram filling
     extractedNumber = seed;
     while(true){
         extractedNumber = Iteration(extractedNumber);
@@ -76,17 +77,28 @@ int main(){
     h->SetLineWidth(2);
     h->SetFillStyle(3003);
     h->SetFillColor(4);
+    h->GetXaxis()->SetTitle("Extracted number");
+    h->GetXaxis()->SetTitleSize(0.045);
+    h->GetXaxis()->SetTitleOffset(0.8);
     h->GetYaxis()->SetRangeUser(10700000, 10750000);
     h->GetYaxis()->SetTitle("Counts");
+    h->GetYaxis()->SetTitleSize(0.045);
+    h->GetYaxis()->SetTitleOffset(1.1);
     h->Draw();
 
+    c1->SetCanvasSize(900,900);
     c1->Divide(1,2);
     c1->cd(1);
     h1->SetLineColor(9);
     h1->SetLineWidth(2);
     h1->SetFillStyle(3003);
     h1->SetFillColor(4);
+    h1->GetXaxis()->SetTitle("Extracted number");
+    h1->GetXaxis()->SetTitleSize(0.045);
+    h1->GetXaxis()->SetTitleOffset(0.8);
     h1->GetYaxis()->SetTitle("Counts");
+    h1->GetYaxis()->SetTitleSize(0.045);
+    h1->GetYaxis()->SetTitleOffset(0.9);
     h1->Draw();
 
     c1->cd(2);
@@ -94,7 +106,12 @@ int main(){
     h2->SetLineWidth(2);
     h2->SetFillStyle(3003);
     h2->SetFillColor(4);
+    h2->GetXaxis()->SetTitle("Extracted number");
+    h2->GetXaxis()->SetTitleSize(0.045);
+    h2->GetXaxis()->SetTitleOffset(0.8);
     h2->GetYaxis()->SetTitle("Counts");
+    h2->GetYaxis()->SetTitleSize(0.045);
+    h2->GetYaxis()->SetTitleOffset(0.9);
     h2->Draw();
 
     c->SaveAs("SimpleGenerator.root");
@@ -137,6 +154,9 @@ int main(){
     long int extractedNumberMINSTD;
     long int extractionLength;
 
+    cout << "****************MINSTD RESULTS****************\n";
+    cout << "The m value is: " << periodMINSTD << endl;
+        
     for(int seedIndex=0; seedIndex < seedMINSTD.size(); seedIndex++){
         extractedNumberMINSTD = seedMINSTD[seedIndex];
         extractionLength = 0;
@@ -145,8 +165,7 @@ int main(){
             extractionLength ++;
             if(extractedNumberMINSTD == seedMINSTD[seedIndex]){break;}
         }        
-        cout << "Length with seed = " << seedMINSTD[seedIndex] << " is: " << extractionLength << endl;
-        
+        cout << "Length with seed = " << seedMINSTD[seedIndex] << " is: " << extractionLength << endl;  
     }
 
     App->Run();
