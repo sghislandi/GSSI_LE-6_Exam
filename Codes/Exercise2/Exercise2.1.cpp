@@ -1,4 +1,5 @@
 //c++ -o  Exercise2.1 Exercise2.1.cpp
+//c++ -Ofast -o  Exercise2.1 Exercise2.1.cpp (optimized)
 
 #include <time.h>
 #include <iostream>
