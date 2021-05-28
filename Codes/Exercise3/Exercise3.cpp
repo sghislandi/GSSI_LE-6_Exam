@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
+#include <random>
 
 #include "TApplication.h"
 #include "TCanvas.h"
@@ -13,41 +14,42 @@
 #include "TAxis.h"
 #include "TH1F.h"
 #include "TF1.h"
-#include "TRandom3.h"
 
 
 using namespace std;
 
 
 void extraction(vector<double> &point, double &PI){
-    double random1, random2;
-    random1 = (double) rand()/RAND_MAX;
-    random2 = (double) rand()/RAND_MAX;
-    point[0] = -1. + 2.*random1;
-    point[1] = -1. + 2.*random2;
+    random_device initSeed;
+    mt19937 randomSeed(initSeed());
+    uniform_real_distribution<double> uniformExtractor(-1.0,1.0);
+    point[0] = uniformExtractor(randomSeed);
+    point[1] = uniformExtractor(randomSeed);
     if (point[0]*point[0] + point[1]*point[1] <= 1){PI ++;}
 }
 
-double PIMonteCarlo(int nExtraction, int seed){
-    double PI = 0;
+double PIMonteCarlo(int nExtraction){
+    random_device initSeed;
+    mt19937 randomSeed(initSeed());
+    uniform_real_distribution<double> uniformExtractor(-1.0,1.0);
+    double Pi = 0;
     double x, y;
-    TRandom3 rand;
-    rand.SetSeed(seed);
 
     for(int i=0; i<nExtraction; i++){
-        x = rand.Uniform(-1,1);
-        y = rand.Uniform(-1,1); 
+        x = uniformExtractor(randomSeed);
+        y = uniformExtractor(randomSeed); 
         if(x*x + y*y <= 1){
-            PI ++;
+            Pi ++;
         }
     }
-    PI = (double) 4. * PI / (double) nExtraction;
-    return PI;
+    Pi = (double) 4. * Pi / (double) nExtraction;
+    return Pi;
 }
 
 
 int main(){
-    TApplication * App = new TApplication("T",0,NULL);
+    gStyle->SetOptStat(11);
+    gStyle->SetOptFit(1111);
     TCanvas * c = new TCanvas();
     TCanvas * c1 = new TCanvas();
     TGraph * gToss = new TGraph();
@@ -106,12 +108,11 @@ int main(){
     nExtraction = 100;
     int nPiEvaluations = 10000;
     int nBin = 50;
-    TRandom3 seed;
 
     TCanvas * cVariance = new TCanvas();
-    TH1F * hVariance = new TH1F("Variance Histogram", "Variance Histogram", nBin, 2.4, 4);
+    TH1F * hVariance = new TH1F("Variance Histogram", "Variance Histogram", nBin, -1, 1);
     for(int i=0; i<nPiEvaluations; i++){
-        hVariance->Fill(PIMonteCarlo(nExtraction, seed.Rndm()));
+        hVariance->Fill(PIMonteCarlo(nExtraction) - M_PI);
     }
 
     //Fitting section
@@ -133,9 +134,10 @@ int main(){
 
     //Repeating for nExtraction = 1000 and 5000
     nExtraction = 1000;
-    TH1F * hVariance1000 = new TH1F("Variance Histogram", "Variance Histogram", nBin, 2, 4);
+    nBin = 500;
+    TH1F * hVariance1000 = new TH1F("Variance Histogram", "Variance Histogram", nBin, -1, 1);
     for(int i=0; i<nPiEvaluations; i++){
-        hVariance1000->Fill(PIMonteCarlo(nExtraction, seed.Rndm()));
+        hVariance1000->Fill(PIMonteCarlo(nExtraction) - M_PI);
     }
     hVariance1000->Fit("gaus");
     TF1 *fit1000 = (TF1*)hVariance1000->GetListOfFunctions()->FindObject("gaus");
@@ -143,9 +145,9 @@ int main(){
 
 
     nExtraction = 5000;
-    TH1F * hVariance5000 = new TH1F("Variance Histogram", "Variance Histogram", nBin, 2, 4);
+    TH1F * hVariance5000 = new TH1F("Variance Histogram", "Variance Histogram", nBin, -1, 1);
     for(int i=0; i<nPiEvaluations; i++){
-        hVariance5000->Fill(PIMonteCarlo(nExtraction, seed.Rndm()));
+        hVariance5000->Fill(PIMonteCarlo(nExtraction) - M_PI);
     }
     hVariance5000->Fit("gaus");
     TF1 *fit5000 = (TF1*)hVariance5000->GetListOfFunctions()->FindObject("gaus");
@@ -174,7 +176,5 @@ int main(){
     functionK->Draw("same");
     cK->SaveAs("K.pdf");
 
-
-    App->Run();
     return 0;
 }
