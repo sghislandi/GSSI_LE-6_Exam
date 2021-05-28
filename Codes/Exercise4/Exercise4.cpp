@@ -35,7 +35,7 @@ double round(int nDice){
     sort(outcomeD.begin(), outcomeD.end(), greater<int>());
 
     for(int i=0; i<nDice; i++){
-        cout << outcomeA[i] << "\t" << outcomeD[i] << endl;
+        //cout << outcomeA[i] << "\t" << outcomeD[i] << endl;
         if(outcomeA[i] > outcomeD[i]){attackerScore++;}
         else{attackerScore--;}
     }
@@ -48,23 +48,38 @@ int main(){
     TCanvas * c = new TCanvas();
 
     int nDice = 3;
-    int nRounds = 10;
+    int nRounds = 1000000;
     int attackerResult;
+    double armyWonByAttacker = 0;
+    double armyLostByAttacker = 0;
 
-    int nBin = nDice + 1;
+    int nBin = 2*nDice + 1;
     double scoreMin = (double) -0.5 - nDice;
     double scoreMax = (double) +0.5 + nDice; 
 
     TH1F* hResults = new TH1F("Results", "Results", nBin, scoreMin, scoreMax);
     for(int i=0; i<nRounds; i++){
-        cout << "***Round " << i << "***" << endl;
+        //cout << "***Round " << i << "***" << endl;
         attackerResult = round(nDice);
         hResults->Fill(attackerResult);
-        cout << "Result: " << attackerResult << endl; 
+        if(attackerResult>0){armyWonByAttacker += attackerResult;}
+        else{armyLostByAttacker -= attackerResult;}
+        //cout << "Result: " << attackerResult << endl; 
     }
 
+    cout << "\n******ATTACKER STATISTICS******\n";
+    cout << "Average number of army won (per round): " << (double) armyWonByAttacker / nRounds << endl;
+    cout << "Average number of army won (per dice): " << (double) armyWonByAttacker / nRounds / nDice << endl;
+    cout << "Average number of army lost (per round): " << (double) armyLostByAttacker / nRounds << endl;
+    cout << "Average number of army lost (per dice): " << (double) armyLostByAttacker / nRounds / nDice << endl;
 
     c->cd();
+    hResults->SetLineColor(9);
+    hResults->SetLineWidth(2);
+    hResults->SetFillStyle(3003);
+    hResults->SetFillColor(4);
+    hResults->GetYaxis()->SetRangeUser(0, hResults->GetMaximum() + nRounds/10);
+    hResults->GetXaxis()->SetRangeUser(scoreMin-1, scoreMax+1);
     hResults->Draw();
 
 
