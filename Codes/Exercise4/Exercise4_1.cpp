@@ -1,4 +1,4 @@
-//c++ -o  Exercise4 Exercise4.cpp `root-config --glibs --cflags`
+//c++ -o  Exercise4_1 Exercise4_1.cpp `root-config --glibs --cflags`
 
 #include <time.h>
 #include <iostream>
