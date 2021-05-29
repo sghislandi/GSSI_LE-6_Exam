@@ -45,7 +45,7 @@ int main(){
     TCanvas * c = new TCanvas();
 
     int nDice = 3;
-    int nRounds = 100000;
+    int nRounds = 1000000;
     int attackerResult;
     double armyWonByAttacker = 0;
 
