@@ -102,7 +102,7 @@ int main(){
     int nAttackerMin = 1;
     int nAttackerMax = 25;
     int nAttacker, nDefender;
-    int nConquerAttempt = 1000;
+    int nConquerAttempt = 10000;
     int nBin = nAttackerMax-nAttackerMin + 1;
 
     TH1F * h = new TH1F("", "", nBin, (double)nAttackerMin-0.5, (double)nAttackerMax+0.5);
@@ -196,6 +196,55 @@ int main(){
             minimumAttackerNumber << " armies the probability that you remain" <<
             " with at least 6 armies is " << minimumRemainingAttackerNumberProb << "%" << endl;
 
+    //4.3.3
+    TCanvas * c2 = new TCanvas();
+    nConquerAttempt = 10000;
+
+    TH1F * h2 = new TH1F("", "", nBin, (double)nAttackerMin-0.5, (double)nAttackerMax+0.5);
+    for(int i=nAttackerMin; i<=nAttackerMax; i++){
+        nAttackerStart = i;
+        for(int j=0; j<nConquerAttempt; j++){
+            nDefender = nDefenderStart;
+            nAttacker = nAttackerStart;
+            conquerResult = 0;
+            conquerResult = conquerAttempt(nDice, nAttacker, nDefender);
+            if(conquerResult==2 && nAttacker >= 6){
+                h2->Fill(nAttackerStart);
+            }
+        }
+    }
+    scaleFactor = (double) 100. / nConquerAttempt;
+    h2->Scale((double) scaleFactor);
+
+    c2->cd();
+    h2->SetLineColor(9);
+    h2->SetLineWidth(2);
+    h2->SetFillStyle(3003);
+    h2->SetFillColor(4);
+    h2->GetXaxis()->SetTitle("Number of Attacker armies");
+    h2->GetXaxis()->SetTitleSize(0.045);
+    h2->GetXaxis()->SetTitleOffset(0.9);
+    h2->GetYaxis()->SetTitle("Win probability (with 6 armies remaining) [%]");
+    h2->GetYaxis()->SetTitleSize(0.045);
+    h2->GetYaxis()->SetTitleOffset(1);
+    h2->Draw("histo");
+
+    probabilityThresholdLine->SetLineColor(2);
+    probabilityThresholdLine->SetLineWidth(2);
+    probabilityThresholdLine->SetLineStyle(9);
+    probabilityThresholdLine->Draw("same");
+    c2->SaveAs("ConquerAnd6Remaining.pdf");
+
+    minimumAttackerNumber = 0;
+    for(int i=0; i<nBin; i++){
+        if(h2->GetBinContent(i) >= probabilityThreshold){
+            minimumAttackerNumber = i;
+            break;
+        }
+    }
+    cout << "\nThe minimum numbers of attacker armies to conquer Kamchatka and" <<
+             " remain with more than 6 armies (in more than 80% of cases) is " << 
+             minimumAttackerNumber << endl;
 
 
     App->Run();
