@@ -11,6 +11,8 @@
 #include "TGraph.h"
 #include "TAxis.h"
 #include "TH1F.h"
+#include "TStyle.h"
+#include "TLine.h"
 
 using namespace std;
 
@@ -87,6 +89,7 @@ int conquerAttempt(int nDice, int &nAttacker, int &nDefender){
 }
 
 int main(){
+    gStyle->SetOptStat(0000);
     TApplication * App = new TApplication("T",0,NULL);
     TCanvas * c = new TCanvas();
 
@@ -99,7 +102,7 @@ int main(){
     int nAttackerMin = 1;
     int nAttackerMax = 25;
     int nAttacker, nDefender;
-    int nConquerAttempt = 500;
+    int nConquerAttempt = 1000;
     int nBin = nAttackerMax-nAttackerMin + 1;
 
     TH1F * h = new TH1F("", "", nBin, (double)nAttackerMin-0.5, (double)nAttackerMax+0.5);
@@ -124,8 +127,20 @@ int main(){
     h->SetLineWidth(2);
     h->SetFillStyle(3003);
     h->SetFillColor(4);
+    h->GetXaxis()->SetTitle("Number of Attacker armies");
+    h->GetXaxis()->SetTitleSize(0.045);
+    h->GetXaxis()->SetTitleOffset(0.9);
+    h->GetYaxis()->SetTitle("Win probability [%]");
+    h->GetYaxis()->SetTitleSize(0.045);
+    h->GetYaxis()->SetTitleOffset(1);
     h->Draw("histo");
         
+    double probabilityThreshold = 80;
+    TLine * probabilityThresholdLine = new TLine((double)nAttackerMin-0.5,probabilityThreshold,(double)nAttackerMax+0.5,probabilityThreshold);
+    probabilityThresholdLine->SetLineColor(2);
+    probabilityThresholdLine->SetLineWidth(2);
+    probabilityThresholdLine->SetLineStyle(9);
+    probabilityThresholdLine->Draw("same");
     
     App->Run();
     return 0;
