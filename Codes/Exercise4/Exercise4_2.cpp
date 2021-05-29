@@ -24,6 +24,13 @@ void printResults(int nAttacker, int nDefender, int attackerWin, int attackerLos
     cout << "Attacker: " << nAttacker << "\t Defender: " << nDefender << endl;
 }
 
+void fillOutcome(int nAttDefDices, vector<int> &outcome){
+    for(int i=0; i<nAttDefDices; i++){
+        outcome[i] = rollDice();
+    }
+}
+
+
 int round(int nDice, int &nAttacker, int &nDefender){
     
     int nAttackerDices = 3;
@@ -35,14 +42,8 @@ int round(int nDice, int &nAttacker, int &nDefender){
     vector<int> outcomeA(nAttackerDices,0);
     vector<int> outcomeD(nDefenderDices,0);
 
-    for(int i=0; i<nAttackerDices; i++){
-        outcomeA[i] = rollDice();
-    }
-
-    for(int i=0; i<nDefenderDices; i++){
-        outcomeD[i] = rollDice();
-    }
-
+    fillOutcome(nAttackerDices, outcomeA);
+    fillOutcome(nDefenderDices, outcomeD);
     sort(outcomeA.begin(), outcomeA.end(), greater<int>());
     sort(outcomeD.begin(), outcomeD.end(), greater<int>());
 
@@ -67,10 +68,10 @@ int round(int nDice, int &nAttacker, int &nDefender){
             return 2;
         }
     }
-
     printResults(nAttacker, nDefender, attackerWin, attackerLost);
     return 0;
 }
+
 
 int conquerAttempt(int nDice, int &nAttacker, int &nDefender){
     int roundCounter = 1;
@@ -81,10 +82,7 @@ int conquerAttempt(int nDice, int &nAttacker, int &nDefender){
         roundCounter ++;
     }
     cout << "\n*********FINAL RESULT*********\n" << flag << endl;
-
     return flag;
-
-
 }
 
 int main(){
