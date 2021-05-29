@@ -186,7 +186,7 @@ int main(){
     h1->GetYaxis()->SetTitleOffset(1);
     h1->Draw("histo");
 
-    c->SaveAs("RemainingAttackerArmyDistrib.pdf");
+    c1->SaveAs("RemainingAttackerArmyDistrib.pdf");
 
 
     for(int i=minimumRemainingAttackerNumber; i<nBin1; i++){
