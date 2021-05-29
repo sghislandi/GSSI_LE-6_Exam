@@ -118,7 +118,6 @@ int main(){
             }
         }
     }
-    
     double scaleFactor = (double) 100. / nConquerAttempt;
     h->Scale((double) scaleFactor);
 
@@ -136,14 +135,69 @@ int main(){
     h->Draw("histo");
         
     double probabilityThreshold = 80;
-    TLine * probabilityThresholdLine = new TLine((double)nAttackerMin-0.5,probabilityThreshold,(double)nAttackerMax+0.5,probabilityThreshold);
+    TLine * probabilityThresholdLine = new TLine((double)nAttackerMin-0.5,probabilityThreshold,
+                                                 (double)nAttackerMax+0.5,probabilityThreshold);
     probabilityThresholdLine->SetLineColor(2);
     probabilityThresholdLine->SetLineWidth(2);
     probabilityThresholdLine->SetLineStyle(9);
     probabilityThresholdLine->Draw("same");
 
     c->SaveAs("NAttackerDistribution.pdf");
-    
+
+    int minimumAttackerNumber = 0;
+    for(int i=0; i<nBin; i++){
+        if(h->GetBinContent(i) >= probabilityThreshold){
+            minimumAttackerNumber = i;
+            break;
+        }
+    }
+    cout << "\nThe minimum numbers of attacker armies to conquer Kamchatka" <<
+             " (in more than 80% of cases) is " << minimumAttackerNumber << endl;
+
+
+    //4.2.2
+    TCanvas * c1 = new TCanvas();
+    int nBin1 = minimumAttackerNumber + 1;
+    nConquerAttempt = 100000;
+    int minimumRemainingAttackerNumber = 6; 
+    double minimumRemainingAttackerNumberProb;
+
+
+    TH1F * h1 = new TH1F("", "", nBin1, -0.5, minimumAttackerNumber+0.5);
+    for(int i=0; i<nConquerAttempt; i++){
+        nDefender = nDefenderStart;
+        nAttacker = minimumAttackerNumber;
+        conquerResult = conquerAttempt(nDice, nAttacker, nDefender);
+        h1->Fill(nAttacker);
+    }
+    scaleFactor = (double) 100. / nConquerAttempt;
+    h1->Scale((double) scaleFactor);
+
+    c1->cd();
+    h1->SetLineColor(9);
+    h1->SetLineWidth(2);
+    h1->SetFillStyle(3003);
+    h1->SetFillColor(4);
+    h1->GetXaxis()->SetTitle("Number of attacker army left");
+    h1->GetXaxis()->SetTitleSize(0.045);
+    h1->GetXaxis()->SetTitleOffset(0.9);
+    h1->GetYaxis()->SetTitle("Probability [%]");
+    h1->GetYaxis()->SetTitleSize(0.045);
+    h1->GetYaxis()->SetTitleOffset(1);
+    h1->Draw("histo");
+
+    c->SaveAs("RemainingAttackerArmyDistrib.pdf");
+
+
+    for(int i=minimumRemainingAttackerNumber; i<nBin1; i++){
+        minimumRemainingAttackerNumberProb += h1->GetBinContent(i);
+    }
+    cout << "\nAfter an attack to Kamchatka (defended by 3 armies) with " <<
+            minimumAttackerNumber << " armies the probability that you remain" <<
+            " with at least 6 armies is " << minimumRemainingAttackerNumberProb << "%" << endl;
+
+
+
     App->Run();
     return 0;
 }
