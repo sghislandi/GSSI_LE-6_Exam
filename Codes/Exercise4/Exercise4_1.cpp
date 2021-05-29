@@ -11,6 +11,7 @@
 #include "TGraph.h"
 #include "TAxis.h"
 #include "TH1F.h"
+#include "TStyle.h"
 
 using namespace std;
 
@@ -45,7 +46,7 @@ int main(){
     TCanvas * c = new TCanvas();
 
     int nDice = 3;
-    int nRounds = 1000000;
+    int nRounds = 100000;
     int attackerResult;
     double armyWonByAttacker = 0;
 
@@ -53,7 +54,7 @@ int main(){
     double scoreMin = (double) -0.5;
     double scoreMax = (double) +0.5 + nDice; 
 
-    TH1F* hResults = new TH1F("Resutls", "Army won by the attacker", nBin, scoreMin, scoreMax);
+    TH1F* hResults = new TH1F("", "", nBin, scoreMin, scoreMax);
     for(int i=0; i<nRounds; i++){
         //cout << "***Round " << i << "***" << endl;
         attackerResult = round(nDice);
@@ -71,10 +72,17 @@ int main(){
     hResults->SetLineWidth(2);
     hResults->SetFillStyle(3003);
     hResults->SetFillColor(4);
+    hResults->GetXaxis()->SetTitle("Army won by the attacker");
+    hResults->GetXaxis()->SetTitleSize(0.045);
+    hResults->GetXaxis()->SetTitleOffset(0.9);
+    hResults->GetYaxis()->SetTitle("Counts");
+    hResults->GetYaxis()->SetTitleSize(0.045);
+    hResults->GetYaxis()->SetTitleOffset(1);
+    hResults->GetYaxis()->SetMaxDigits(1);
     hResults->GetYaxis()->SetRangeUser(0, hResults->GetMaximum() + nRounds/10);
     hResults->GetXaxis()->SetRangeUser(scoreMin-1, scoreMax+1);
     hResults->Draw();
-    hResults->SaveAs("AttackerResults.pdf");
+    c->SaveAs("AttackerResults.pdf");
 
 
 
