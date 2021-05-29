@@ -106,7 +106,7 @@ int main(){
     int nBin = nAttackerMax-nAttackerMin + 1;
 
     TH1F * h = new TH1F("", "", nBin, (double)nAttackerMin-0.5, (double)nAttackerMax+0.5);
-    for(int i=nAttackerMin; i<nAttackerMax; i++){
+    for(int i=nAttackerMin; i<=nAttackerMax; i++){
         nAttackerStart = i;
         for(int j=0; j<nConquerAttempt; j++){
             nDefender = nDefenderStart;
@@ -141,6 +141,8 @@ int main(){
     probabilityThresholdLine->SetLineWidth(2);
     probabilityThresholdLine->SetLineStyle(9);
     probabilityThresholdLine->Draw("same");
+
+    c->SaveAs("NAttackerDistribution.pdf");
     
     App->Run();
     return 0;
