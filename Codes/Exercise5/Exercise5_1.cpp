@@ -116,7 +116,7 @@ int main(){
 
   double nExtraction = 1e3;
   int nRepetitions = 1e3;
-  int nBin = 100;
+  int nBin = 30;
 
   for(int i=0; i<degreeMax; i++){
     cout << "Doing the variance computation for x^" << i+1 << endl;
