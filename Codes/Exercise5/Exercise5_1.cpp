@@ -116,7 +116,7 @@ int main(){
 
   double nExtraction = 1e3;
   int nRepetitions = 1e3;
-  int nBin = 30;
+  int nBin = 31;
 
   for(int i=0; i<degreeMax; i++){
     cout << "Doing the variance computation for x^" << i+1 << endl;
@@ -132,25 +132,23 @@ int main(){
   
   for(int i=0; i<degreeMax; i++){
     cVariance->cd(i+1);
-    /*graphError[i]->SetTitle(Form("Hit or Miss discrepancy for x^{%i}", i+1));
-    graphError[i]->SetMarkerColor(2);
-    graphError[i]->SetMarkerStyle(8);
-    graphError[i]->SetMarkerSize(0.9);
-    pad = (TPad*) c->FindObject(Form("c1_%i", i+1));
-    pad->SetLogy();
-    pad->SetLogx();
-    graphError[i]->GetXaxis()->SetTitle("N extractions");
-    graphError[i]->GetXaxis()->SetTitleSize(0.055);
-    graphError[i]->GetXaxis()->SetTitleOffset(0.85);
-    graphError[i]->GetXaxis()->SetLabelSize(0.06);
-    graphError[i]->GetYaxis()->SetTitle("Discrepancy");
-    graphError[i]->GetYaxis()->SetTitleSize(0.055);
-    graphError[i]->GetYaxis()->SetTitleOffset(0.6);
-    graphError[i]->GetYaxis()->SetRangeUser(0.0005, 1);
-    graphError[i]->GetYaxis()->SetLabelSize(0.06);
-*/
+    histoVariance[i]->SetTitle(Form("Variance fot x^{%i}", i+1));
+    histoVariance[i]->SetLineColor(9);
+    histoVariance[i]->SetFillStyle(3003);
+    histoVariance[i]->SetFillColor(4);
+    histoVariance[i]->SetLineWidth(2);
+
+    histoVariance[i]->GetXaxis()->SetTitle("|I_{approx} - I_{exact}|");
+    histoVariance[i]->GetXaxis()->SetTitleSize(0.055);
+    histoVariance[i]->GetXaxis()->SetTitleOffset(0.85);
+    histoVariance[i]->GetXaxis()->SetLabelSize(0.06);
+    histoVariance[i]->GetYaxis()->SetTitle("Counts");
+    histoVariance[i]->GetYaxis()->SetTitleSize(0.055);
+    histoVariance[i]->GetYaxis()->SetTitleOffset(0.6);
+    histoVariance[i]->GetYaxis()->SetLabelSize(0.06);
     histoVariance[i]->Draw("");
   }
+  cVariance->SaveAs("VariancePlot.pdf");
 
 
   App->Run();
