@@ -8,7 +8,6 @@
 
 #include "TApplication.h"
 #include "TCanvas.h"
-#include "TGraph.h"
 #include "TAxis.h"
 #include "TH1F.h"
 #include "TStyle.h"
