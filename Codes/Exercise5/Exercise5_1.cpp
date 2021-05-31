@@ -43,7 +43,7 @@ double HitOrMiss(double xMin, double xMax, double yMin, double yMax, int degree,
   vector<double> extractionResult(2,0);
   for(int i=0; i<nExtraction; i++){
     extractionResult = Extraction2D(xMin, xMax, yMin, yMax);
-    if(extractionResult[1] < functionPower(extractionResult[0], degree)){
+    if(extractionResult[1] <= functionPower(extractionResult[0], degree)){
       integral ++;
     }
   }
@@ -57,7 +57,7 @@ int main(){
 
   //Obtain I approx - I exact depending on nExtraction
   int nExtractionMin = 1e1;
-  int nExtractionMax = 1e6;
+  int nExtractionMax = 1e5;
   int degreeMax = 6;
   double exactIntegralValue;
   int counter = 0;
@@ -82,8 +82,6 @@ int main(){
 
 
   //Plot
-  c->SetLogy();
-  c->SetLogx();
   c->Divide(2,3);
   
 
@@ -109,9 +107,50 @@ int main(){
 
     graphError[i]->Draw("AP");
   }
+  c->SaveAs("Discrepancies.pdf");
 
+//Second part of 5.1
+  TCanvas * cVariance = new TCanvas();  
+  TH1F ** histoVariance;
+  histoVariance = new TH1F*[degreeMax];
 
+  double nExtraction = 1e3;
+  int nRepetitions = 1e3;
+  int nBin = 100;
 
+  for(int i=0; i<degreeMax; i++){
+    cout << "Doing the variance computation for x^" << i+1 << endl;
+    histoVariance[i] = new TH1F("","", nBin, -0.1, 0.1);
+    exactIntegralValue = exactIntegral(i+1);
+    for(int j=0; j<=nRepetitions; j++){
+      histoVariance[i]->Fill(HitOrMiss(xMin, xMax, yMin, yMax, i+1, nExtraction) - exactIntegralValue);
+    }
+  }
+
+  //Plot
+  cVariance->Divide(2,3);
+  
+  for(int i=0; i<degreeMax; i++){
+    cVariance->cd(i+1);
+    /*graphError[i]->SetTitle(Form("Hit or Miss discrepancy for x^{%i}", i+1));
+    graphError[i]->SetMarkerColor(2);
+    graphError[i]->SetMarkerStyle(8);
+    graphError[i]->SetMarkerSize(0.9);
+    pad = (TPad*) c->FindObject(Form("c1_%i", i+1));
+    pad->SetLogy();
+    pad->SetLogx();
+    graphError[i]->GetXaxis()->SetTitle("N extractions");
+    graphError[i]->GetXaxis()->SetTitleSize(0.055);
+    graphError[i]->GetXaxis()->SetTitleOffset(0.85);
+    graphError[i]->GetXaxis()->SetLabelSize(0.06);
+    graphError[i]->GetYaxis()->SetTitle("Discrepancy");
+    graphError[i]->GetYaxis()->SetTitleSize(0.055);
+    graphError[i]->GetYaxis()->SetTitleOffset(0.6);
+    graphError[i]->GetYaxis()->SetRangeUser(0.0005, 1);
+    graphError[i]->GetYaxis()->SetLabelSize(0.06);
+*/
+    histoVariance[i]->Draw("");
+  }
 
 
   App->Run();
