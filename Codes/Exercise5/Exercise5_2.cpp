@@ -23,7 +23,7 @@ double exponential(double x){
     return exp(-x);
 }
 
-vector<double> Extraction2D(int dimensionality,double xMin, double xMax, double yMin, double yMax, TRandom3* randomArray, vector<double> &randomExtraction){
+void Extraction2D(int dimensionality,double xMin, double xMax, double yMin, double yMax, TRandom3* randomArray, vector<double> &randomExtraction){
     //Fill x's
     for(int i=0; i<dimensionality; i++){
         randomExtraction[i] = randomArray[i].Uniform(xMin, xMax);
@@ -32,7 +32,6 @@ vector<double> Extraction2D(int dimensionality,double xMin, double xMax, double 
     for(int i=0; i<dimensionality; i++){
         randomExtraction[i+dimensionality] = randomArray[i+dimensionality].Uniform(yMin, yMax);
     }
-    return randomExtraction;
 }
 
 double HitOrMiss(int dimensionality, double xMin, double xMax, double yMin, double yMax, int nExtraction){
@@ -49,7 +48,7 @@ double HitOrMiss(int dimensionality, double xMin, double xMax, double yMin, doub
     }
     //Extraction
     for(int i=0; i < nExtraction; i++){
-        randomExtraction = Extraction2D(dimensionality, xMin, xMax, yMin, yMax, randomArray, randomExtraction);
+        Extraction2D(dimensionality, xMin, xMax, yMin, yMax, randomArray, randomExtraction);
         for(int j=0; j<dimensionality; j++){
             if(randomExtraction[j + dimensionality] < exponential(randomExtraction[j])){
                 singleIntegrals[j] ++;
@@ -93,7 +92,7 @@ int main(){
     double xMax = 1.;
     double e = 2.7182818284; 
     double yMin = (double) 1./e;
-    double yMax = 1;
+    double yMax = 1.;
     vector<double> exactIntegral(maxD, 0);
     vector<double> integralHitOrMiss(maxD, 0);
     vector<double> integralMidPoint(maxD, 0);
