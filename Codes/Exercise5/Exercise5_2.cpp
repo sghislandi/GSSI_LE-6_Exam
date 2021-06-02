@@ -13,10 +13,6 @@
 #include "TGraph.h"
 #include "TMultiGraph.h" 
 #include "TAxis.h"
-#include "TH1F.h"
-#include "TStyle.h"
-#include "TLine.h"
-#include "TPad.h"
 #include "TRandom3.h"
 
 
