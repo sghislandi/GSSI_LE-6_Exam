@@ -98,8 +98,10 @@ int main(){
     vector<double> integralMidPoint(maxD, 0);
 
     //Time measurement
-    clock_t startTime;
-    clock_t stopTime;
+    clock_t startTimeHitOrMiss[maxD];
+    clock_t stopTimeHitOrMiss[maxD];
+    clock_t startTimeMidPoint[maxD];
+    clock_t stopTimeMidPoint[maxD];
 
     //Filling the exactIntegralVector
     for(int i=0; i<maxD; i++){
@@ -108,8 +110,12 @@ int main(){
 
     //Filling the HitOrMiss
     for(int i=0; i<maxD; i++){
+        startTimeHitOrMiss[i] = clock();
         integralHitOrMiss[i] = HitOrMiss(i+1, xMin, xMax, yMin, yMax, nExtraction[i]);
+        stopTimeHitOrMiss[i] = clock();
+        startTimeMidPoint[i] = clock();
         integralMidPoint[i] = MidPoint(i+1, xMin, xMax, nCell[i]);
+        stopTimeMidPoint[i] = clock();
     }
 
     //Plot section
@@ -123,14 +129,10 @@ int main(){
     TGraph * graphMidPointTime = new TGraph();
 
     for(int i=0; i<maxD; i++){
-        startTime = clock();
         graphHitOrMiss->SetPoint(i, i+1, abs(integralHitOrMiss[i] - exactIntegral[i]));
-        stopTime = clock();
-        graphHitOrMissTime->SetPoint(i, i+1, (stopTime-startTime) / CLOCKS_PER_SEC); 
-        startTime = clock();
+        graphHitOrMissTime->SetPoint(i, i+1, (stopTimeHitOrMiss[i]-startTimeHitOrMiss[i]) / CLOCKS_PER_SEC); 
         graphMidPoint->SetPoint(i, i+1, abs(integralMidPoint[i] - exactIntegral[i]));
-        stopTime = clock();
-        graphMidPointTime->SetPoint(i, i+1, (stopTime-startTime) / CLOCKS_PER_SEC); 
+        graphMidPointTime->SetPoint(i, i+1, (stopTimeMidPoint[i]-startTimeMidPoint[i]) / CLOCKS_PER_SEC); 
     }
 
     c->cd();
