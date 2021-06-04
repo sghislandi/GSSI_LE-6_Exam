@@ -17,13 +17,6 @@
 
 using namespace std; 
 
-void printPosition(vector<double> position){
-    for(int i=0; i<position.size(); i++){
-        cout << position[i] << "\t";
-    }
-    cout << endl;
-}
-
 double integrandFunctionMidPoint(vector<double> position, double dx, double xMin){
     double squaredSum = 0;
     for(int i=0; i<position.size(); i++){
@@ -109,10 +102,6 @@ int main(){
     vector<double> integralHitOrMiss(maxD, 0);
     vector<double> integralMidPoint(maxD, 0);
 
-    //Time measurement
-    clock_t startTime;
-    clock_t stopTime;
-
     //Filling the exactIntegralVector
     for(int i=0; i<maxD; i++){
         exactIntegral[i] = (double) (i+1)/3.;
@@ -126,13 +115,11 @@ int main(){
         cout << integralHitOrMiss[i] << "\t" << integralMidPoint[i] << "\t" << exactIntegral[i] << endl;
     }
 
-
     //Plot section
     TCanvas * c = new TCanvas();
     TMultiGraph * graphIntegral = new TMultiGraph();
     TGraph * graphHitOrMiss = new TGraph();
     TGraph * graphMidPoint = new TGraph();
-
     for(int i=0; i<maxD; i++){
         graphHitOrMiss->SetPoint(i, i+1, abs(integralHitOrMiss[i] - exactIntegral[i]));
         graphMidPoint->SetPoint(i, i+1, abs(integralMidPoint[i] - exactIntegral[i]));
