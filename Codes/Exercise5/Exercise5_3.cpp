@@ -93,6 +93,7 @@ double MidPoint(int dimensionality, double xMin, double xMax, int nDivisions){
 }
 
 int main(){
+    TApplication * App = new TApplication("T",0,NULL);
 
     //Integration parameters
     int maxD = 8;
@@ -124,6 +125,44 @@ int main(){
         integralMidPoint[i] = MidPoint(currentDimension, xMin, xMax, nCell[i]);
         cout << integralHitOrMiss[i] << "\t" << integralMidPoint[i] << "\t" << exactIntegral[i] << endl;
     }
+
+
+    //Plot section
+    TCanvas * c = new TCanvas();
+    TMultiGraph * graphIntegral = new TMultiGraph();
+    TGraph * graphHitOrMiss = new TGraph();
+    TGraph * graphMidPoint = new TGraph();
+
+    for(int i=0; i<maxD; i++){
+        graphHitOrMiss->SetPoint(i, i+1, abs(integralHitOrMiss[i] - exactIntegral[i]));
+        graphMidPoint->SetPoint(i, i+1, abs(integralMidPoint[i] - exactIntegral[i]));
+    }
+
+    c->cd();
+    c->SetLogy();
+    graphIntegral->Add(graphHitOrMiss);
+    graphIntegral->Add(graphMidPoint);
+    graphHitOrMiss->SetMarkerColor(2);
+    graphHitOrMiss->SetMarkerStyle(8);
+    graphHitOrMiss->SetMarkerSize(1.5);
+    graphHitOrMiss->SetTitle("Hit or Miss");
+    graphMidPoint->SetMarkerColor(1);
+    graphMidPoint->SetMarkerStyle(22);
+    graphMidPoint->SetMarkerSize(1.5);
+    graphMidPoint->SetTitle("Midpoint");
+    graphIntegral->GetXaxis()->SetTitle("Dimensionality");
+    graphIntegral->GetXaxis()->SetTitleSize(0.055);
+    graphIntegral->GetXaxis()->SetTitleOffset(0.80);
+    graphIntegral->GetXaxis()->SetLabelSize(0.04);
+    graphIntegral->GetYaxis()->SetTitle("|I_{approx} - I_{exact}|");
+    graphIntegral->GetYaxis()->SetTitleSize(0.055);
+    graphIntegral->GetYaxis()->SetTitleOffset(0.85);
+    graphIntegral->GetYaxis()->SetRangeUser(1e-13, 0.1);
+    graphIntegral->GetYaxis()->SetLabelSize(0.04);
+    graphIntegral->Draw("AP");
+    c->BuildLegend(0.55, 0.3, 0.85, 0.15);
+
+    c->SaveAs("HitOrMissVSMidpoint2.pdf");
 
 
 
