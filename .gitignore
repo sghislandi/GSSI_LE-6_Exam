@@ -17,3 +17,10 @@ Codes/Exercise5/Exercise5_3
 Codes/Exercise6/Exercise6
 
 Codes/Exercise7/Exercise7
+
+*.aux
+*.log
+*.tex
+*.out
+*.toc
+*.gz
