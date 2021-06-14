@@ -1,5 +1,5 @@
-//c++ -o  Exercise2_1 Exercise2_1.cpp
-//c++ -Ofast -o  Exercise2.1 Exercise2.1.cpp (optimized)
+//c++ -o  Exercise2.1 Exercise2.1.cpp
+//c++ -Ofast -o  Exercise2_1 Exercise2_1cpp (optimized)
 
 #include <time.h>
 #include <iostream>
