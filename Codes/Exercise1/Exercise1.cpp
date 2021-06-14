@@ -86,8 +86,8 @@ int main(){
     h->GetYaxis()->SetTitleOffset(1.1);
     h->Draw();
 
-    c1->SetCanvasSize(900,900);
-    c1->Divide(1,2);
+    c1->SetCanvasSize(900,400);
+    c1->Divide(2,1);
     c1->cd(1);
     h1->SetLineColor(9);
     h1->SetLineWidth(2);
