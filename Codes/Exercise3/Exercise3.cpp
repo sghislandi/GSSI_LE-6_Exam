@@ -25,7 +25,8 @@ void extraction(vector<double> &point, double &PI){
     uniform_real_distribution<double> uniformExtractor(-1.0,1.0);
     point[0] = uniformExtractor(randomSeed);
     point[1] = uniformExtractor(randomSeed);
-    if (point[0]*point[0] + point[1]*point[1] <= 1){PI ++;}
+    if (point[0]*point[0] + point[1]*point[1] <= 1){
+        PI ++;}
 }
 
 double PIMonteCarlo(int nExtraction){
@@ -48,6 +49,7 @@ double PIMonteCarlo(int nExtraction){
 
 
 int main(){
+
     gStyle->SetOptStat(11);
     gStyle->SetOptFit(1111);
     TCanvas * c = new TCanvas();
@@ -56,7 +58,7 @@ int main(){
     TGraph * gDifference = new TGraph();
     TEllipse *circle = new TEllipse(0,0,1);
     
-    int nExtraction = 1e4;
+    int nExtraction = 1e5;
     vector<double> point(2,0);
     double PI = 0;
     double difference;
@@ -64,7 +66,7 @@ int main(){
     for(int i=0; i<nExtraction; i++){
         extraction(point, PI);
         gToss->SetPoint(i, point[0], point[1]);
-        if(i % 10 == 0){
+        if(i % 100 == 0){
             gDifference->SetPoint(gDifference->GetN(), i, abs(((double) 4. * PI / nExtraction) - M_PI));
         }
     }
@@ -106,7 +108,7 @@ int main(){
 
     //Evaluate the uncertainties on the PI evaluation
     nExtraction = 100;
-    int nPiEvaluations = 10000;
+    int nPiEvaluations = 1e5;
     int nBin = 50;
 
     TCanvas * cVariance = new TCanvas();
@@ -116,21 +118,27 @@ int main(){
     }
 
     //Fitting section
-    hVariance->Fit("gaus");
+    hVariance->Fit("gaus", "Q");
     TF1 *fit = (TF1*)hVariance->GetListOfFunctions()->FindObject("gaus");
     double variance100 = fit->GetParameter(2);
-    double k = variance100*sqrt(nExtraction); 
+    double k = variance100*sqrt(nExtraction);
+    cout << "\nThe value of k is " << k << endl << endl;
 
     cVariance->cd();
-    hVariance->GetXaxis()->SetTitle("#pi estimation");
+    hVariance->SetLineColor(9);
+    hVariance->SetLineWidth(2);
+    hVariance->SetFillStyle(3003);
+    hVariance->SetFillColor(4);
+    hVariance->GetXaxis()->SetTitle("#pi_{est} - #pi_{exp}");
     hVariance->GetXaxis()->SetTitleSize(0.045);
     hVariance->GetXaxis()->SetTitleOffset(0.8);
     hVariance->GetYaxis()->SetTitle("Counts");
     hVariance->GetYaxis()->SetTitleSize(0.045);
     hVariance->GetYaxis()->SetTitleOffset(1);
     hVariance->Draw();
-    fit->Draw("same");
+    //fit->Draw("same");
     cVariance->SaveAs("Variance.pdf");
+
 
     //Repeating for nExtraction = 1000 and 5000
     nExtraction = 1000;
@@ -139,7 +147,7 @@ int main(){
     for(int i=0; i<nPiEvaluations; i++){
         hVariance1000->Fill(PIMonteCarlo(nExtraction) - M_PI);
     }
-    hVariance1000->Fit("gaus");
+    hVariance1000->Fit("gaus", "Q");
     TF1 *fit1000 = (TF1*)hVariance1000->GetListOfFunctions()->FindObject("gaus");
     double variance1000 = fit1000->GetParameter(2);
 
@@ -149,7 +157,7 @@ int main(){
     for(int i=0; i<nPiEvaluations; i++){
         hVariance5000->Fill(PIMonteCarlo(nExtraction) - M_PI);
     }
-    hVariance5000->Fit("gaus");
+    hVariance5000->Fit("gaus", "Q");
     TF1 *fit5000 = (TF1*)hVariance5000->GetListOfFunctions()->FindObject("gaus");
     double variance5000 = fit5000->GetParameter(2);
 
