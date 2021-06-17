@@ -14,15 +14,15 @@
 using namespace std;
 
 
-float harmonicSumFloat(int nSum){
+float SumFloat(int nSum){
     float sum = 0;
-    for(int i=1; i<= nSum; i++){sum += (float)1/i;}
+    for(int i=1; i<= nSum; i++){sum += (float)1/nSum;}
     return sum;
 }
 
-double harmonicSumDouble(int nSum){
+double SumDouble(int nSum){
     double sum = 0;
-    for(int i=1; i<= nSum; i++){sum += (double)1/i;}
+    for(int i=1; i<= nSum; i++){sum += (double)1/nSum;}
     return sum;
 }
 
@@ -33,8 +33,8 @@ int main(){
     vector<float> outcomeFloat;
     vector<float> outcomeDouble;
     for(int i=0; i<nSums.size(); i++){
-        outcomeFloat.push_back(harmonicSumFloat(nSums[i]));
-        outcomeDouble.push_back(harmonicSumDouble(nSums[i]));
+        outcomeFloat.push_back(SumFloat(nSums[i]));
+        outcomeDouble.push_back(SumDouble(nSums[i]));
     }
 
 
@@ -49,7 +49,7 @@ int main(){
     TCanvas * c = new TCanvas();
     TGraph * g = new TGraph();
     for(int i=0; i<nSums.size(); i++){
-        g->SetPoint(i, nSums[i], outcomeDouble[i]-outcomeFloat[i]);
+        g->SetPoint(i, nSums[i], abs(outcomeDouble[i]-outcomeFloat[i]));
     }
     c->cd();
     c->SetLogx();
@@ -66,7 +66,7 @@ int main(){
     g->GetYaxis()->SetLabelSize(0.04);
     g->Draw("AP");
 
-    c->SaveAs("Difference.pdf");
+    c->SaveAs("DifferenceExercise6.pdf");
     App->Run();
     
     return 0;
