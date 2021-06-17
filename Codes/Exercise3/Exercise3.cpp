@@ -79,10 +79,10 @@ int main(){
     gToss->SetMarkerSize(0.5);
     gToss->SetMarkerColor(2);
     gToss->GetXaxis()->SetTitle("x coordinate");
-    gToss->GetXaxis()->SetTitleSize(0.045);
+    gToss->GetXaxis()->SetTitleSize(0.055);
     gToss->GetXaxis()->SetTitleOffset(0.9);
     gToss->GetYaxis()->SetTitle("y coordinate");
-    gToss->GetYaxis()->SetTitleSize(0.045);
+    gToss->GetYaxis()->SetTitleSize(0.055);
     gToss->GetYaxis()->SetTitleOffset(1.1);
     gToss->Draw("AP");
     circle->SetLineWidth(3);
@@ -94,10 +94,10 @@ int main(){
     c1->cd();
     c1->SetLogy();
     gDifference->GetXaxis()->SetTitle("Number of extractions");
-    gDifference->GetXaxis()->SetTitleSize(0.045);
+    gDifference->GetXaxis()->SetTitleSize(0.055);
     gDifference->GetXaxis()->SetTitleOffset(0.9);
     gDifference->GetYaxis()->SetTitle("|Deviation|");
-    gDifference->GetYaxis()->SetTitleSize(0.045);
+    gDifference->GetYaxis()->SetTitleSize(0.055);
     gDifference->GetYaxis()->SetTitleOffset(0.8);
     gDifference->SetMarkerStyle(8);
     gDifference->SetMarkerSize(0.5);

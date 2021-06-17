@@ -89,40 +89,42 @@ int main(){
   for(int i=0; i<degreeMax; i++){
     c->cd(i+1);
     graphError[i]->SetTitle(Form("Hit or Miss discrepancy for x^{%i}", i+1));
-    graphError[i]->SetMarkerColor(2);
+    gStyle->SetTitleFontSize(0.08);
+    graphError[i]->SetMarkerColor(1);
     graphError[i]->SetMarkerStyle(8);
     graphError[i]->SetMarkerSize(0.9);
     pad = (TPad*) c->FindObject(Form("c1_%i", i+1));
     pad->SetLogy();
     pad->SetLogx();
     graphError[i]->GetXaxis()->SetTitle("N extractions");
-    graphError[i]->GetXaxis()->SetTitleSize(0.055);
-    graphError[i]->GetXaxis()->SetTitleOffset(0.85);
+    graphError[i]->GetXaxis()->SetTitleSize(0.075);
+    graphError[i]->GetXaxis()->SetTitleOffset(0.6);
     graphError[i]->GetXaxis()->SetLabelSize(0.06);
     graphError[i]->GetYaxis()->SetTitle("Discrepancy");
-    graphError[i]->GetYaxis()->SetTitleSize(0.055);
+    graphError[i]->GetYaxis()->SetTitleSize(0.075);
     graphError[i]->GetYaxis()->SetTitleOffset(0.6);
-    graphError[i]->GetYaxis()->SetRangeUser(0.0005, 1);
+    graphError[i]->GetYaxis()->SetRangeUser(1e-4, 1);
     graphError[i]->GetYaxis()->SetLabelSize(0.06);
 
     graphError[i]->Draw("AP");
   }
   c->SaveAs("Discrepancies.pdf");
+  c->SaveAs("Discrepancies.root");
 
 //Second part of 5.1
   TCanvas * cVariance = new TCanvas();  
   TH1F ** histoVariance;
   histoVariance = new TH1F*[degreeMax];
 
-  double nExtraction = 1e3;
-  int nRepetitions = 1e3;
-  int nBin = 31;
+  double nExtraction = 1e5;
+  int nRepetitions = 1e2;
+  int nBin = 50;
 
   for(int i=0; i<degreeMax; i++){
     cout << "Doing the variance computation for x^" << i+1 << endl;
-    histoVariance[i] = new TH1F("","", nBin, -0.1, 0.1);
+    histoVariance[i] = new TH1F("","", nBin, -0.02, 0.02);
     exactIntegralValue = exactIntegral(i+1);
-    for(int j=0; j<=nRepetitions; j++){
+    for(int j=0; j<nRepetitions; j++){
       histoVariance[i]->Fill(HitOrMiss(xMin, xMax, yMin, yMax, i+1, nExtraction) - exactIntegralValue);
     }
   }
@@ -132,7 +134,7 @@ int main(){
   
   for(int i=0; i<degreeMax; i++){
     cVariance->cd(i+1);
-    histoVariance[i]->SetTitle(Form("Variance fot x^{%i}", i+1));
+    histoVariance[i]->SetTitle(Form("Variance for x^{%i}", i+1));
     histoVariance[i]->SetLineColor(9);
     histoVariance[i]->SetFillStyle(3003);
     histoVariance[i]->SetFillColor(4);
@@ -149,6 +151,7 @@ int main(){
     histoVariance[i]->Draw("");
   }
   cVariance->SaveAs("VariancePlot.pdf");
+  cVariance->SaveAs("VariancePlot.root");
 
 
   App->Run();

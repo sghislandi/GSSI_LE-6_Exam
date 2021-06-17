@@ -112,7 +112,6 @@ int main(){
         currentDimension = i+1;
         integralHitOrMiss[i] = HitOrMiss(currentDimension, xMin, xMax, yMin, currentDimension, nExtraction[i]);
         integralMidPoint[i] = MidPoint(currentDimension, xMin, xMax, nCell[i]);
-        cout << integralHitOrMiss[i] << "\t" << integralMidPoint[i] << "\t" << exactIntegral[i] << endl;
     }
 
     //Plot section
@@ -152,6 +151,7 @@ int main(){
     c->SaveAs("HitOrMissVSMidpoint2.pdf");
 
 
+    App->Run();
 
     return 0;
 }

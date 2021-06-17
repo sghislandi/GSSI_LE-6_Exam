@@ -149,10 +149,13 @@ int main(){
 /***********************************************************************/
     //MINSTD generation part
     int a = 16807;      //pow(7,5)
-    int periodMINSTD = 2147483647;      //pow(2,31) - 1
+    long int periodMINSTD = 2147483647;      //pow(2,31) - 1
     vector<long int> seedMINSTD = {23353, 3432, 43543821};
     long int extractedNumberMINSTD;
     long int extractionLength;
+
+    TCanvas * c2 = new TCanvas();
+    TH1F * h3 = new TH1F("MINSTD", "MINSTD", nBin, 0, 1);
 
     cout << "****************MINSTD RESULTS****************\n";
     cout << "The m value is: " << periodMINSTD << endl;
@@ -162,11 +165,30 @@ int main(){
         extractionLength = 0;
         while(true){
             extractedNumberMINSTD =  MINSTD(a, periodMINSTD, extractedNumberMINSTD);
+            if(seedIndex == 0){
+                h3->Fill((double) extractedNumberMINSTD / periodMINSTD);
+            }
             extractionLength ++;
             if(extractedNumberMINSTD == seedMINSTD[seedIndex]){break;}
         }        
         cout << "Length with seed = " << seedMINSTD[seedIndex] << " is: " << extractionLength << endl;  
     }
+
+    c2->cd(2);
+    h3->SetLineColor(9);
+    h3->SetLineWidth(2);
+    h3->SetFillStyle(3003);
+    h3->SetFillColor(4);
+    h3->GetXaxis()->SetTitle("Extracted number");
+    h3->GetXaxis()->SetTitleSize(0.045);
+    h3->GetXaxis()->SetTitleOffset(0.8);
+    h3->GetYaxis()->SetTitle("Counts");
+    h3->GetYaxis()->SetTitleSize(0.045);
+    h3->GetYaxis()->SetTitleOffset(0.9);
+    h3->Draw();
+
+    c2->SaveAs("Minstd.root");
+    c2->SaveAs("Minstd.pdf");
 
     App->Run();
 
