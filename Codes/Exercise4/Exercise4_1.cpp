@@ -45,7 +45,7 @@ int main(){
     TCanvas * c = new TCanvas();
 
     int nDice = 3;
-    int nRounds = 100000;
+    int nRounds = 1e6;
     int attackerResult;
     double armyWonByAttacker = 0;
 
@@ -82,9 +82,6 @@ int main(){
     hResults->GetXaxis()->SetRangeUser(scoreMin-1, scoreMax+1);
     hResults->Draw();
     c->SaveAs("AttackerResults.pdf");
-
-
-
 
     App->Run();
     return 0;
