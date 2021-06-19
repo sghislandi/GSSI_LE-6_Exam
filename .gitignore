@@ -1,25 +1,6 @@
 *.root
 
-Codes/Exercise1/Exercise1
-
-Codes/Exercise2/Exercise2
-Codes/Exercise2/Exercise2_1
-
-Codes/Exercise3/Exercise3
-
-Codes/Exercise4/Exercise4_1
-Codes/Exercise4/Exercise4_2
-
-Codes/Exercise5/Exercise5_1
-Codes/Exercise5/Exercise5_2
-Codes/Exercise5/Exercise5_3
-
-Codes/Exercise6/Exercise6
-
-Codes/Exercise7/Exercise7
-
-Codes/Exercise8/Exercise8_1
-Codes/Exercise8/Exercise8_2
+build
 
 
 *.aux
