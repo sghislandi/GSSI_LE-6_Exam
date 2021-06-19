@@ -1,9 +1,6 @@
 //c++ -o  Exercise3 Exercise3.cpp `root-config --glibs --cflags`
 
-#include <time.h>
-#include <iostream>
 #include <stdlib.h>
-#include <math.h>
 #include <random>
 
 #include "TApplication.h"
@@ -18,7 +15,7 @@
 
 using namespace std;
 
-
+//Hit or Miss Monte Carlo (just to plot the points)
 void extraction(vector<double> &point, double &PI){
     random_device initSeed;
     mt19937 randomSeed(initSeed());
@@ -29,13 +26,14 @@ void extraction(vector<double> &point, double &PI){
         PI ++;}
 }
 
+//Hit or Miss Monte Carlo returning the evaluated PI
 double PIMonteCarlo(int nExtraction){
     random_device initSeed;
     mt19937 randomSeed(initSeed());
     uniform_real_distribution<double> uniformExtractor(-1.0,1.0);
+
     double Pi = 0;
     double x, y;
-
     for(int i=0; i<nExtraction; i++){
         x = uniformExtractor(randomSeed);
         y = uniformExtractor(randomSeed); 
@@ -49,20 +47,22 @@ double PIMonteCarlo(int nExtraction){
 
 
 int main(){
-
+    TApplication * App = new TApplication("T",0,NULL);
     gStyle->SetOptStat(11);
     gStyle->SetOptFit(1111);
+
+    //Initializations
     TCanvas * c = new TCanvas();
     TCanvas * c1 = new TCanvas();
     TGraph * gToss = new TGraph();
     TGraph * gDifference = new TGraph();
     TEllipse *circle = new TEllipse(0,0,1);
-    
-    int nExtraction = 1e5;
     vector<double> point(2,0);
+    int nExtraction = 1e5;
     double PI = 0;
     double difference;
 
+    //First extraction to plot the extracted points and to compute PI_exp - PI_MC
     for(int i=0; i<nExtraction; i++){
         extraction(point, PI);
         gToss->SetPoint(i, point[0], point[1]);
@@ -73,6 +73,7 @@ int main(){
     PI = (double) 4. * PI / nExtraction;
     cout << "Your estimate of pi is: " << PI << endl;
 
+    //Plot section
     c->SetCanvasSize(700, 700);
     c->cd();
     gToss->SetMarkerStyle(8);
@@ -105,12 +106,10 @@ int main(){
     c1->SaveAs("Difference.pdf");
 
 
-
-    //Evaluate the uncertainties on the PI evaluation
+    //Compute the MC uncertainties evaluating PI multiple times
     nExtraction = 100;
     int nPiEvaluations = 1e5;
     int nBin = 50;
-
     TCanvas * cVariance = new TCanvas();
     TH1F * hVariance = new TH1F("Variance Histogram", "Variance Histogram", nBin, -1, 1);
     for(int i=0; i<nPiEvaluations; i++){
@@ -124,6 +123,7 @@ int main(){
     double k = variance100*sqrt(nExtraction);
     cout << "\nThe value of k is " << k << endl << endl;
 
+    //Plot section
     cVariance->cd();
     hVariance->SetLineColor(9);
     hVariance->SetLineWidth(2);
@@ -140,7 +140,7 @@ int main(){
     cVariance->SaveAs("Variance.pdf");
 
 
-    //Repeating for nExtraction = 1000 and 5000
+    //Repeating the multiple extraction for nExtraction = 1000 and 5000
     nExtraction = 1000;
     nBin = 500;
     TH1F * hVariance1000 = new TH1F("Variance Histogram", "Variance Histogram", nBin, -1, 1);
@@ -151,7 +151,6 @@ int main(){
     TF1 *fit1000 = (TF1*)hVariance1000->GetListOfFunctions()->FindObject("gaus");
     double variance1000 = fit1000->GetParameter(2);
 
-
     nExtraction = 5000;
     TH1F * hVariance5000 = new TH1F("Variance Histogram", "Variance Histogram", nBin, -1, 1);
     for(int i=0; i<nPiEvaluations; i++){
@@ -161,16 +160,9 @@ int main(){
     TF1 *fit5000 = (TF1*)hVariance5000->GetListOfFunctions()->FindObject("gaus");
     double variance5000 = fit5000->GetParameter(2);
 
-    //Final graph
+    //Plot section
     TCanvas * cK = new TCanvas();
     TGraph * gK = new TGraph();
-    TF1 *functionK = new TF1("function","[0]/sqrt(x)",10,6000);
-    functionK->SetParameter(0, k);
-
-    gK->SetPoint(0, 100, variance100);
-    gK->SetPoint(1, 1000, variance1000);
-    gK->SetPoint(2, 5000, variance5000);
-
     cK->cd();
     gK->GetXaxis()->SetTitle("Number of extractions");
     gK->GetXaxis()->SetTitleSize(0.045);
@@ -181,8 +173,17 @@ int main(){
     gK->SetMarkerStyle(8);
     gK->SetMarkerSize(1);
     gK->Draw("AP");
+
+    TF1 *functionK = new TF1("function","[0]/sqrt(x)",10,6000);
+    functionK->SetParameter(0, k);
+    gK->SetPoint(0, 100, variance100);
+    gK->SetPoint(1, 1000, variance1000);
+    gK->SetPoint(2, 5000, variance5000);
     functionK->Draw("same");
     cK->SaveAs("K.pdf");
+
+
+    App->Run();
 
     return 0;
 }
