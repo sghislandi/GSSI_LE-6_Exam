@@ -1,8 +1,6 @@
-*.root
-
 build
 
-
+*.root
 *.aux
 *.log
 *.tex
