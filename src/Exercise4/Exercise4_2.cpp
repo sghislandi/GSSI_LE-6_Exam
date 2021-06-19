@@ -131,7 +131,7 @@ int main(){
     probabilityThresholdLine->SetLineWidth(2);
     probabilityThresholdLine->SetLineStyle(9);
     probabilityThresholdLine->Draw("same");
-    c->SaveAs("NAttackerDistribution.pdf");
+    c->SaveAs("figs/Exercise4/NAttackerDistribution.pdf");
 
     //Evaluate the minimum number of attacker armies for having more than
     //80% probability to conquer the territory
@@ -177,7 +177,7 @@ int main(){
     h1->GetYaxis()->SetTitleSize(0.045);
     h1->GetYaxis()->SetTitleOffset(1);
     h1->Draw("histo");
-    c1->SaveAs("RemainingAttackerArmyDistrib.pdf");
+    c1->SaveAs("figs/Exercise4/RemainingAttackerArmyDistrib.pdf");
 
     //Integrating to have the total probability to remain with at leat 6 armies
     for(int i=minimumRemainingAttackerNumber; i<nBin1; i++){
@@ -227,7 +227,7 @@ int main(){
     probabilityThresholdLine->SetLineWidth(2);
     probabilityThresholdLine->SetLineStyle(9);
     probabilityThresholdLine->Draw("same");
-    c2->SaveAs("ConquerAnd6Remaining.pdf");
+    c2->SaveAs("figs/Exercise4/ConquerAnd6Remaining.pdf");
 
     minimumAttackerNumber = 0;
     for(int i=0; i<nBin; i++){

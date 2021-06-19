@@ -147,8 +147,7 @@ int main(){
     graphIntegral->GetYaxis()->SetLabelSize(0.04);
     graphIntegral->Draw("AP");
     c->BuildLegend(0.55, 0.3, 0.85, 0.15);
-
-    c->SaveAs("HitOrMissVSMidpoint2.pdf");
+    c->SaveAs("figs/Exercise5/HitOrMissVSMidpoint2.pdf");
 
 
     App->Run();

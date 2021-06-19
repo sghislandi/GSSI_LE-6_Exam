@@ -90,7 +90,7 @@ int main(){
     circle->SetLineColor(kBlue);
     circle->SetFillStyle(0);
     circle->Draw("same");
-    c->SaveAs("CircleToss.pdf");
+    c->SaveAs("figs/Exercise3/CircleToss.pdf");
 
     c1->cd();
     c1->SetLogy();
@@ -103,7 +103,7 @@ int main(){
     gDifference->SetMarkerStyle(8);
     gDifference->SetMarkerSize(0.5);
     gDifference->Draw("AP");
-    c1->SaveAs("Difference.pdf");
+    c1->SaveAs("figs/Exercise3/Difference.pdf");
 
 
     //Compute the MC uncertainties evaluating PI multiple times
@@ -137,7 +137,7 @@ int main(){
     hVariance->GetYaxis()->SetTitleOffset(1);
     hVariance->Draw();
     //fit->Draw("same");
-    cVariance->SaveAs("Variance.pdf");
+    cVariance->SaveAs("figs/Exercise3/Variance.pdf");
 
 
     //Repeating the multiple extraction for nExtraction = 1000 and 5000
@@ -180,7 +180,7 @@ int main(){
     gK->SetPoint(1, 1000, variance1000);
     gK->SetPoint(2, 5000, variance5000);
     functionK->Draw("same");
-    cK->SaveAs("K.pdf");
+    cK->SaveAs("figs/Exercise3/K.pdf");
 
 
     App->Run();

@@ -118,7 +118,7 @@ int main(){
     hGeant4->Fit(fitFunction, "Q");
     fitFunction->Draw("Same");
 
-    c->SaveAs("Geant4Sampling.pdf");
+    c->SaveAs("figs/Exercise7/Geant4Sampling.pdf");
 
     App->Run();
 

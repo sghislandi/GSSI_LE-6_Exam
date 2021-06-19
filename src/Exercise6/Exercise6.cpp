@@ -66,7 +66,7 @@ int main(){
     g->GetYaxis()->SetLabelSize(0.04);
     g->Draw("AP");
 
-    c->SaveAs("DifferenceExercise6.pdf");
+    c->SaveAs("figs/Exercise6/DifferenceExercise6.pdf");
     App->Run();
     
     return 0;

@@ -183,8 +183,8 @@ int main(){
     cTime->BuildLegend();
 
 
-    c->SaveAs("HitOrMissVSMidpoint.pdf");
-    cTime->SaveAs("HitOrMissVSMidpointTime.pdf");
+    c->SaveAs("figs/Exercise5/HitOrMissVSMidpoint.pdf");
+    cTime->SaveAs("figs/Exercise5/HitOrMissVSMidpointTime.pdf");
 
     App->Run();
 

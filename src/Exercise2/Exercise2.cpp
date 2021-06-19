@@ -61,7 +61,7 @@ int main(){
     TF1 * Rutherford = new TF1("Rutherford", RutherfordFormula, minX, maxX, 1);
     Rutherford->SetLineWidth(3);
     h->Fit("Rutherford");
-    c->SaveAs("Rutherford.pdf");
+    c->SaveAs("figs/Exercise2/Rutherford.pdf");
 
 
     App->Run();

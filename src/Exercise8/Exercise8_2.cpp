@@ -84,7 +84,7 @@ int main(){
     hEnergy->GetYaxis()->SetTitleOffset(1);
     hEnergy->GetYaxis()->SetRangeUser(0, 1.4*nExtraction/nBin);
     hEnergy->Draw();
-    cEnergy->SaveAs("FluorescenceEnergy.pdf");
+    cEnergy->SaveAs("figs/Exercise8/FluorescenceEnergy.pdf");
 
     cDirection->cd();
     gDirection->SetTitle("Fluorescence direction");
@@ -95,7 +95,7 @@ int main(){
     gDirection->SetMarkerSize(0.3);
     gDirection->SetMarkerColor(kRed);
     gDirection->Draw("P");
-    cDirection->SaveAs("FluorescenceDirection.pdf");
+    cDirection->SaveAs("figs/Exercise8/FluorescenceDirection.pdf");
 
     App->Run();
 

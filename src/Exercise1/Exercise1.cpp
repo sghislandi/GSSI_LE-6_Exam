@@ -115,10 +115,8 @@ int main(){
     h2->GetYaxis()->SetTitleOffset(0.9);
     h2->Draw();
 
-    c->SaveAs("SimpleGenerator.root");
-    c->SaveAs("SimpleGenerator.pdf");
-    c1->SaveAs("SimpleGenerator1.root");
-    c1->SaveAs("SimpleGenerator1.pdf");
+    c->SaveAs("figs/Exercise1/SimpleGenerator.pdf");
+    c1->SaveAs("figs/Exercise1/SimpleGenerator1.pdf");
 
     //Chi square test
     double chiSquare, chiSquare1, chiSquare2;
@@ -188,7 +186,7 @@ int main(){
     h3->GetYaxis()->SetTitleSize(0.045);
     h3->GetYaxis()->SetTitleOffset(0.9);
     h3->Draw();
-    c2->SaveAs("Minstd.pdf");
+    c2->SaveAs("figs/Exercise1/Minstd.pdf");
 
 
     App->Run();

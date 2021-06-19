@@ -79,7 +79,7 @@ int main(){
     hResults->GetYaxis()->SetRangeUser(0, hResults->GetMaximum() + nRounds/10);
     hResults->GetXaxis()->SetRangeUser(scoreMin-1, scoreMax+1);
     hResults->Draw();
-    c->SaveAs("AttackerResults.pdf");
+    c->SaveAs("figs/Exercise4/AttackerResults.pdf");
 
 
     App->Run();

@@ -108,8 +108,7 @@ int main(){
 
     graphError[i]->Draw("AP");
   }
-  c->SaveAs("Discrepancies.pdf");
-  c->SaveAs("Discrepancies.root");
+  c->SaveAs("figs/Exercise5/Discrepancies.pdf");
 
 //Second part of 5.1
   TCanvas * cVariance = new TCanvas();  
@@ -150,8 +149,7 @@ int main(){
     histoVariance[i]->GetYaxis()->SetLabelSize(0.06);
     histoVariance[i]->Draw("");
   }
-  cVariance->SaveAs("VariancePlot.pdf");
-  cVariance->SaveAs("VariancePlot.root");
+  cVariance->SaveAs("figs/Exercise5/VariancePlot.pdf");
 
 
   App->Run();

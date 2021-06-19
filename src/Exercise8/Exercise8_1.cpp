@@ -105,7 +105,7 @@ int main(){
     hPhi->GetYaxis()->SetTitleOffset(1);
     hPhi->GetYaxis()->SetRangeUser(0, 1.4*nExtraction/nBin);
     hPhi->Draw();
-    cPhi->SaveAs("Phi.pdf");
+    cPhi->SaveAs("figs/Exercise8/Phi.pdf");
 
     cTheta->cd();
     hTheta->SetLineColor(9);
@@ -126,7 +126,7 @@ int main(){
     sauterFit->SetParName(2,"#gamma");
     sauterFit->SetParameters(100,1.,3.);
     hTheta->Fit("sauterFit");
-    cTheta->SaveAs("Theta.pdf");
+    cTheta->SaveAs("figs/Exercise8/Theta.pdf");
 
 
     cDirection->cd();
@@ -138,7 +138,7 @@ int main(){
     gDirection->SetMarkerSize(0.3);
     gDirection->SetMarkerColor(kRed);
     gDirection->Draw("P");
-    cDirection->SaveAs("Direction.pdf");
+    cDirection->SaveAs("figs/Exercise8/Direction.pdf");
 
     cDirectionY->cd();
     gDirectionY->SetTitle("Photoelectron direction (0,1,0)");
@@ -149,7 +149,7 @@ int main(){
     gDirectionY->SetMarkerSize(0.3);
     gDirectionY->SetMarkerColor(kRed);
     gDirectionY->Draw("P");
-    cDirectionY->SaveAs("DirectionY.pdf");
+    cDirectionY->SaveAs("figs/Exercise8/DirectionY.pdf");
 
     App->Run();
 
