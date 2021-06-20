@@ -1,18 +1,25 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(GSSI-LE-6)
 
+#C++17 needed for the new ROOT version
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-Ofast")
 
+#Set optimized compiler options for exercise2_1
+set(CMAKE_CXX_FLAGS "-Ofast")
 MAKE_DIRECTORY(figs/Exercise2)
 add_executable(Exercise2_1 src/Exercise2/Exercise2_1.cpp)
 
+#Reset default compiler options
+set(CMAKE_CXX_FLAGS "")
+
+#Include and link ROOT
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 find_package(ROOT REQUIRED COMPONENTS RIO Net)
 include(${ROOT_USE_FILE})
 include_directories(${ROOT_INCLUDE_DIR})
 include_directories("${CMAKE_SOURCE_DIR}")
 
+#Compile all the remaining executables
 MAKE_DIRECTORY(figs/Exercise1)
 add_executable(Exercise1 src/Exercise1/Exercise1.cpp)
 target_link_libraries(Exercise1 "${ROOT_LIBRARIES}" )
