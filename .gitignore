@@ -1,4 +1,5 @@
 build
+Report/Pictures
 
 *.root
 *.aux
@@ -7,5 +8,4 @@ build
 *.out
 *.toc
 *.gz
-*.pdf
 *.png
