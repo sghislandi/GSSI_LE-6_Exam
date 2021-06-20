@@ -1,12 +1,9 @@
 //c++ -o  Exercise5_2 Exercise5_2.cpp `root-config --glibs --cflags`
 
-#include <time.h>
 #include <iostream>
-#include <stdlib.h>
 #include <math.h>
-#include <fstream>
 #include <random>
-
+#include <time.h>
 
 #include "TApplication.h"
 #include "TCanvas.h"
@@ -15,14 +12,14 @@
 #include "TAxis.h"
 #include "TRandom3.h"
 
-
 using namespace std;
 
-
+//Function e^{-x}
 double exponential(double x){
     return exp(-x);
 }
 
+//2D extraction for the Hit or Miss Monte Carlo
 void Extraction2D(int dimensionality,double xMin, double xMax, double yMin, double yMax, TRandom3* randomArray, vector<double> &randomExtraction){
     //Fill x's
     for(int i=0; i<dimensionality; i++){
@@ -32,8 +29,7 @@ void Extraction2D(int dimensionality,double xMin, double xMax, double yMin, doub
     for(int i=0; i<dimensionality; i++){
         randomExtraction[i+dimensionality] = randomArray[i+dimensionality].Uniform(yMin, yMax);
     }
-}
-
+}//Hit or Miss Monte Carlo
 double HitOrMiss(int dimensionality, double xMin, double xMax, double yMin, double yMax, int nExtraction){
     vector<double> randomExtraction(2*dimensionality,0);
     vector<double> singleIntegrals(dimensionality,0);
@@ -64,11 +60,11 @@ double HitOrMiss(int dimensionality, double xMin, double xMax, double yMin, doub
     return integralProduct;
 }
 
+//MidPoint summation method
 double MidPoint(int dimensionality, double xMin, double xMax, int nDivisions){
     vector<double> singleIntegrals(dimensionality,0);
     double dx = (double) (xMax - xMin) / nDivisions;
     double integralProduct = 1.;
-
     for(int i=0; i<dimensionality; i++){
         for(double cursor=xMin; cursor<xMax; cursor+=dx){
             singleIntegrals[i] += exponential(cursor + 0.5*dx) * dx;
@@ -83,11 +79,10 @@ double MidPoint(int dimensionality, double xMin, double xMax, int nDivisions){
 int main(){
     TApplication * App = new TApplication("T",0,NULL);
 
-    //Integration parameters
+    //Initialization
     int maxD = 8;
     vector<int> nCell = {65536, 256, 40, 16, 9, 6, 5, 4};
     vector<int> nExtraction = {65536, 65536, 64000, 65536, 59049, 46656, 78125, 65536};
-
     double xMin = 0.;
     double xMax = 1.;
     double e = 2.7182818284; 
@@ -127,14 +122,12 @@ int main(){
     TGraph * graphMidPoint = new TGraph();
     TGraph * graphHitOrMissTime = new TGraph();
     TGraph * graphMidPointTime = new TGraph();
-
     for(int i=0; i<maxD; i++){
         graphHitOrMiss->SetPoint(i, i+1, abs(integralHitOrMiss[i] - exactIntegral[i]));
         graphHitOrMissTime->SetPoint(i, i+1, (stopTimeHitOrMiss[i]-startTimeHitOrMiss[i]) / CLOCKS_PER_SEC); 
         graphMidPoint->SetPoint(i, i+1, abs(integralMidPoint[i] - exactIntegral[i]));
         graphMidPointTime->SetPoint(i, i+1, (stopTimeMidPoint[i]-startTimeMidPoint[i]) / CLOCKS_PER_SEC); 
     }
-
     c->cd();
     c->SetLogy();
     graphIntegral->Add(graphHitOrMiss);
@@ -177,14 +170,13 @@ int main(){
     graphTime->GetYaxis()->SetTitle("Time [s]");
     graphTime->GetYaxis()->SetTitleSize(0.055);
     graphTime->GetYaxis()->SetTitleOffset(0.91);
-    //graphTime->GetYaxis()->SetRangeUser(0.0005, 1);
     graphTime->GetYaxis()->SetLabelSize(0.04);
     graphTime->Draw("AP");
     cTime->BuildLegend();
 
-
     c->SaveAs("figs/Exercise5/HitOrMissVSMidpoint.pdf");
     cTime->SaveAs("figs/Exercise5/HitOrMissVSMidpointTime.pdf");
+
 
     App->Run();
 

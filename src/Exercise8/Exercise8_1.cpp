@@ -18,13 +18,12 @@
 
 using namespace std;
 
-
+//Sauter formula
 double SauterFormula(double theta){
     double eMassEnergy = 511.; //keV
     double photonEnergy = 1000.; //keV
     double bindingEnergy = 88.01; //keV
     double electronEnergy = photonEnergy - bindingEnergy;
-
     double beta = sqrt(electronEnergy * (electronEnergy + 2*eMassEnergy)) 
                     / (electronEnergy + eMassEnergy); 
     double gamma = 1 + electronEnergy / eMassEnergy;
@@ -34,43 +33,42 @@ double SauterFormula(double theta){
     return numerator / denominator * lastTerm;
 }
 
+//Sauter formula used for the Fit (with parameters)
 double SauterFormulaFit(double *x, double * par){
     return par[0]*(sin(x[0])*sin(x[0])) / (pow(1-par[1]*cos(x[0]),4)) * 
             (1 + 0.5*par[2]*(par[2] -1)*(par[2]-2)*(1-par[1]*cos(x[0])));
 }
 
+//Theta extraction through Hit or Miss applied to the Sauter formula
 void thetaExtraction(TRandom3 * randomThetaX, TRandom3 * randomThetaY, vector<double> &direction){
     double x = randomThetaX->Uniform(0, M_PI);
     double y = randomThetaY->Uniform(0., 2000.);
-    //cout << x << "  " << y << "  ";
     if(y < SauterFormula(x)){
-        //cout << SauterFormula(x) << "  yes" << endl;
         direction[1] = x;
         return;
     }
-    else{
-        thetaExtraction(randomThetaX, randomThetaY, direction);
-        }
+    else{thetaExtraction(randomThetaX, randomThetaY, direction);}
 }
 
+//Extraction of theta and phi
 void directionExtraction(vector<double> &direction, TRandom3 *randomPhi, TRandom3 * randomThetaX, TRandom3 * randomThetaY){
     direction[0] = randomPhi->Uniform(0, 2*M_PI);
     thetaExtraction(randomThetaX, randomThetaY, direction);
 }
 
-
 int main(){
     TApplication * App = new TApplication("T",0,NULL);
 
+    //Initialization
     random_device initSeedGenerator;
     TRandom3 * randomPhi = new TRandom3(initSeedGenerator());
     TRandom3 * randomThetaX = new TRandom3(initSeedGenerator());
     TRandom3 * randomThetaY = new TRandom3(initSeedGenerator());
-
     vector<double> direction(2,0);
     int nExtraction = 1e6;
     int nBin = 200;
 
+    //Canvas and graphs definition
     TCanvas * cPhi = new TCanvas();
     TH1F* hPhi = new TH1F("", "", nBin, 0, 2*M_PI);
     TCanvas * cTheta = new TCanvas();
@@ -80,6 +78,7 @@ int main(){
     TCanvas * cDirectionY = new TCanvas();
     TGraph2D * gDirectionY = new TGraph2D();
 
+    //Space distribution sampling of the emitted photoelectron
     for(int i=0; i<nExtraction; i++){
         directionExtraction(direction, randomPhi, randomThetaX, randomThetaY);
         hPhi->Fill(direction[0]);
@@ -92,6 +91,7 @@ int main(){
         }
     }
 
+    //Plot section
     cPhi->cd();
     hPhi->SetLineColor(9);
     hPhi->SetLineWidth(2);
@@ -120,6 +120,7 @@ int main(){
     hTheta->GetYaxis()->SetTitleOffset(1);
     hTheta->Draw();
 
+    //Fit section
     TF1 * sauterFit = new TF1("sauterFit", SauterFormulaFit, 0, M_PI, 3);
     sauterFit->SetParName(0,"Normalization");
     sauterFit->SetParName(1,"#beta");
@@ -128,7 +129,7 @@ int main(){
     hTheta->Fit("sauterFit");
     cTheta->SaveAs("figs/Exercise8/Theta.pdf");
 
-
+    //Plot section
     cDirection->cd();
     gDirection->SetTitle("Photoelectron direction (0,0,1)");
     gDirection->GetXaxis()->SetTitle("x");
@@ -150,6 +151,7 @@ int main(){
     gDirectionY->SetMarkerColor(kRed);
     gDirectionY->Draw("P");
     cDirectionY->SaveAs("figs/Exercise8/DirectionY.pdf");
+
 
     App->Run();
 

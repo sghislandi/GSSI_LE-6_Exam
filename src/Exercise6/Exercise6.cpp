@@ -1,9 +1,7 @@
 // c++ -o  Exercise6 Exercise6.cpp `root-config --glibs --cflags`
 
 #include <iostream>
-#include <stdlib.h>
 #include <math.h>
-#include <fstream>
 
 #include "TApplication.h"
 #include "TCanvas.h"
@@ -13,13 +11,14 @@
 
 using namespace std;
 
-
+//Sum 1/X with float type
 float SumFloat(int nSum){
     float sum = 0;
     for(int i=1; i<= nSum; i++){sum += (float)1/nSum;}
     return sum;
 }
 
+//Sum 1/X with double type
 double SumDouble(int nSum){
     double sum = 0;
     for(int i=1; i<= nSum; i++){sum += (double)1/nSum;}
@@ -29,6 +28,7 @@ double SumDouble(int nSum){
 int main(){
     TApplication * App = new TApplication("App",0,NULL);
 
+    //Initialization
     vector<int> nSums = {1000,10000,100000,1000000};
     vector<float> outcomeFloat;
     vector<float> outcomeDouble;
@@ -36,7 +36,6 @@ int main(){
         outcomeFloat.push_back(SumFloat(nSums[i]));
         outcomeDouble.push_back(SumDouble(nSums[i]));
     }
-
 
     //Print results
     cout << "*******RESULTS*******" << endl;
@@ -65,8 +64,9 @@ int main(){
     g->GetYaxis()->SetTitleOffset(1.1);
     g->GetYaxis()->SetLabelSize(0.04);
     g->Draw("AP");
-
     c->SaveAs("figs/Exercise6/DifferenceExercise6.pdf");
+
+    
     App->Run();
     
     return 0;

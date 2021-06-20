@@ -43,7 +43,7 @@ int main(){
     //Initialization of the first enerator
     unsigned int seed = 987654321;
     unsigned int extractedNumber = seed;
-    int iterationNumber = 0;
+    int iterationNumber = 1;
     unsigned int period = 4294967295;
 
     int nBin1 = 100;
@@ -57,12 +57,15 @@ int main(){
     while(true){
         extractedNumber = Iteration(extractedNumber);
         if(extractedNumber == seed) break;
+        iterationNumber ++;
     }
     clock_t c_end = clock();
     cout << "Time needed to complete the whole extraction period: " << (double) (c_end-c_start) / CLOCKS_PER_SEC << " seconds" << endl;
+    cout << "You reobtained the seed after " << iterationNumber << " iterations" << endl;
 
     //Computation of the period and histogram filling
     extractedNumber = seed;
+    iterationNumber = 0;
     while(true){
         extractedNumber = Iteration(extractedNumber);
         iterationNumber ++;
@@ -71,7 +74,6 @@ int main(){
         if(iterationNumber <= 1000000){ h2->Fill((double) extractedNumber / period); }
         if(extractedNumber == seed) break;
     }
-    cout << "You reobtained the seed after " << iterationNumber << " iterations" << endl;
 
     //Plots
     c->cd();

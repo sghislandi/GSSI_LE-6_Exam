@@ -16,29 +16,31 @@
 
 using namespace std; 
 
+//Sample a uniform phi
 double samplePhi(mt19937 &seed){
     uniform_real_distribution<double> randomPhi(0.0, 2*M_PI);
     return randomPhi(seed);
 }
 
+//Sample a uniform costheta
 double sampleTheta(mt19937 &seed){
     uniform_real_distribution<double> randomCosTheta(-1.0, 1.0);
     return acos(randomCosTheta(seed));
 }
 
+//Extraction of the L shell in which the K shell vacancy will move
 int LShellExtraction(mt19937 &seed){
     discrete_distribution<int> LShellOccupacy{2,2,4};
     return LShellOccupacy(seed);
 }
 
+//Sample energy and direction of the fluorescence photons
 void sampleEmittedPhotons(mt19937 &seed, vector<double> &emittedPhotonEnergies, vector<vector<double>> &emittedPhotonDirections){
     vector<double> LEnergies = {15.86, 15.2, 13.04}; //keV
     double bindingEnergy = 88.01 ; //keV
-
     int sampledLShell = LShellExtraction(seed);
     emittedPhotonEnergies[0] = bindingEnergy - LEnergies[sampledLShell];
     emittedPhotonEnergies[1] = LEnergies[sampledLShell];
-
     emittedPhotonDirections[0][0] = samplePhi(seed);
     emittedPhotonDirections[0][1] = sampleTheta(seed);
     emittedPhotonDirections[1][0] = samplePhi(seed);
@@ -48,6 +50,7 @@ void sampleEmittedPhotons(mt19937 &seed, vector<double> &emittedPhotonEnergies, 
 int main(){
     TApplication * App = new TApplication("T",0,NULL);
 
+    //Initialization
     random_device initSeedGenerator;
     std::mt19937 seed(initSeedGenerator());
     vector<double> emittedPhotonEnergies(2,0);
@@ -55,10 +58,13 @@ int main(){
     int nExtraction = 1e4;
     int nBin = 1000;
 
+    //Canvas and graphs definitions
     TCanvas * cEnergy = new TCanvas();
     TH1F* hEnergy = new TH1F("", "", nBin, 0, 100);
     TCanvas * cDirection = new TCanvas();
     TGraph2D * gDirection = new TGraph2D();
+
+    //Sampling multiple fluorescence photons
     for(int i=0; i<nExtraction; i++){
         sampleEmittedPhotons(seed, emittedPhotonEnergies, emittedPhotonDirections);
         hEnergy->Fill(emittedPhotonEnergies[0]);
@@ -67,10 +73,9 @@ int main(){
                     sin(emittedPhotonDirections[0][1])*sin(emittedPhotonDirections[0][0]), cos(emittedPhotonDirections[0][1]));
         gDirection->SetPoint(2*i+1, sin(emittedPhotonDirections[1][1])*cos(emittedPhotonDirections[1][0]),
                     sin(emittedPhotonDirections[1][1])*sin(emittedPhotonDirections[1][0]), cos(emittedPhotonDirections[1][1]));
-        //cout << "Photon1 : " << emittedPhotonEnergies[0] << "  (" << emittedPhotonDirections[0][0] << "," << emittedPhotonDirections[0][1]<<")" << endl
-        //<< "Photon2 : " << emittedPhotonEnergies[1] << "  (" << emittedPhotonDirections[1][0] << "," << emittedPhotonDirections[1][1] << ")" << endl << endl;
     }
 
+    //Plot section
     cEnergy->cd();
     hEnergy->SetLineColor(9);
     hEnergy->SetLineWidth(2);
@@ -96,6 +101,7 @@ int main(){
     gDirection->SetMarkerColor(kRed);
     gDirection->Draw("P");
     cDirection->SaveAs("figs/Exercise8/FluorescenceDirection.pdf");
+
 
     App->Run();
 

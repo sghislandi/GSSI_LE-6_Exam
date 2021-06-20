@@ -2,9 +2,7 @@
 
 #include <time.h>
 #include <iostream>
-#include <stdlib.h>
 #include <math.h>
-#include <fstream>
 #include <random>
 
 #include "TApplication.h"
@@ -17,6 +15,7 @@
 
 using namespace std; 
 
+//Function that compute the squared sum of a interval given dx and the position inside the nested loop
 double integrandFunctionMidPoint(vector<double> position, double dx, double xMin){
     double squaredSum = 0;
     for(int i=0; i<position.size(); i++){
@@ -25,19 +24,17 @@ double integrandFunctionMidPoint(vector<double> position, double dx, double xMin
     return squaredSum;
 }
 
+//Nested for loop (flag time nested)
 void nDimensionLoop(int nDivisions, double dx, double xMin, vector<double> &position, double &integral, int flag){
     for(int i=0; i<nDivisions; i++){
         position[flag-1] = i;
-        if(flag>1){
-            nDimensionLoop(nDivisions, dx, xMin, position, integral, flag-1);
-        }
-        if(flag==1){
-            integral += integrandFunctionMidPoint(position, dx, xMin);
-        }
+        if(flag>1){nDimensionLoop(nDivisions, dx, xMin, position, integral, flag-1);}
+        if(flag==1){integral += integrandFunctionMidPoint(position, dx, xMin);}
     }
     position[flag-1] = 0;
 }
 
+//Function that compute the squared sum of a vector with dimension dimensionality
 double integrandFunctionHitOrMiss(int dimensionality, vector<double> x){
     double squaredSum = 0;
     for(int i=0; i<dimensionality; i++){
@@ -46,6 +43,7 @@ double integrandFunctionHitOrMiss(int dimensionality, vector<double> x){
     return squaredSum;
 }
 
+//2D extraction for the Hit or Miss method
 void Extraction(int dimensionality,double xMin, double xMax, double yMin, double yMax, TRandom3* randomArray, vector<double> &randomExtraction){
     //Fill x's
     for(int i=0; i<dimensionality; i++){
@@ -55,13 +53,13 @@ void Extraction(int dimensionality,double xMin, double xMax, double yMin, double
     randomExtraction[dimensionality] = randomArray[dimensionality-1].Uniform(yMin, yMax);
 }
 
+//Hit or Miss method
 double HitOrMiss(int dimensionality, double xMin, double xMax, double yMin, double yMax, int nExtraction){
     vector<double> randomExtraction(dimensionality+1,0);
     TRandom3 * randomArray;
     randomArray = new TRandom3[dimensionality+1];
     random_device initSeed;
     double integral = 0.;
-
     //Setting the seed
     for(int i=0; i<dimensionality+1; i++){
         randomArray[i].SetSeed(initSeed());
@@ -76,6 +74,7 @@ double HitOrMiss(int dimensionality, double xMin, double xMax, double yMin, doub
     return (double) integral / nExtraction * dimensionality;
 }
 
+//Mid point method
 double MidPoint(int dimensionality, double xMin, double xMax, int nDivisions){
     double dx = (double) (xMax - xMin) / nDivisions;
     double integral = 0;
@@ -88,11 +87,10 @@ double MidPoint(int dimensionality, double xMin, double xMax, int nDivisions){
 int main(){
     TApplication * App = new TApplication("T",0,NULL);
 
-    //Integration parameters
+    //Initialization
     int maxD = 8;
     vector<int> nCell = {65536, 256, 40, 16, 9, 6, 5, 4};
     vector<int> nExtraction = {65536, 65536, 64000, 65536, 59049, 46656, 78125, 65536};
-
     double xMin = 0.;
     double xMax = 1.;
     double yMin = 0.;
@@ -123,7 +121,6 @@ int main(){
         graphHitOrMiss->SetPoint(i, i+1, abs(integralHitOrMiss[i] - exactIntegral[i]));
         graphMidPoint->SetPoint(i, i+1, abs(integralMidPoint[i] - exactIntegral[i]));
     }
-
     c->cd();
     c->SetLogy();
     graphIntegral->Add(graphHitOrMiss);

@@ -1,10 +1,7 @@
  //c++ -o  Exercise7 Exercise7.cpp `root-config --glibs --cflags`
 
-#include <time.h>
 #include <iostream>
-#include <stdlib.h>
 #include <math.h>
-#include <fstream>
 #include <random>
 
 #include "TApplication.h"
@@ -17,16 +14,19 @@
 
 using namespace std;
 
+//Inverse cdf of the sampling function
 double inverseCDF(double x, double mu){
     return -1./mu * log(1-x);
 }
 
+//Inverse method 
 double PDFExtraction(double mu, TRandom3* random){
     double extractedNumber;
     extractedNumber = random->Uniform(0.,1.);
     return inverseCDF(extractedNumber, mu);
 }
 
+//Select the minimum between two numbers counting the times number1 is the minimum
 double minimumSelection(double number1, double number2, int &counter){
     if(number1<=number2){
         counter ++;
@@ -35,6 +35,7 @@ double minimumSelection(double number1, double number2, int &counter){
     else{return number2;}
 }
 
+//Geant for sampling returning a histrogram with the extracted s
 TH1F* Geant4Sampling(int nExtraction, TRandom3* random1, TRandom3* random2, int nBin, int xMin, int xMax, int &counter){
     double s1, s2;
     double mu1 = 1.;
@@ -49,6 +50,7 @@ TH1F* Geant4Sampling(int nExtraction, TRandom3* random1, TRandom3* random2, int 
     return h;
 }
 
+//Penelope for sampling returning a histrogram with the extracted s
 TH1F* PenelopeSampling(int nExtraction, TRandom3* random, int nBin, int xMin, int xMax){
     double s;
     double mu = 3; 
@@ -66,6 +68,7 @@ int main(){
     gStyle->SetOptFit(111);
     gStyle->SetOptStat(0000);
 
+    //Initialization
     random_device initSeed;
     TRandom3 * randomS1 = new TRandom3;
     TRandom3 * randomS2 = new TRandom3;
@@ -73,7 +76,6 @@ int main(){
     randomS1->SetSeed(initSeed());
     randomS2->SetSeed(initSeed());
     randomS->SetSeed(initSeed());
-
     int nExtraction = 1e5;
     int nBin = 100;
     int xMin = 0;
@@ -83,10 +85,8 @@ int main(){
     TCanvas * c = new TCanvas();
     TH1F * hGeant4 = new TH1F();
     TH1F * hPenelope = new TH1F();
-
     hGeant4 = Geant4Sampling(nExtraction, randomS1, randomS2, nBin, xMin, xMax, counter);
     //hPenelope = PenelopeSampling(nExtraction, randomS);
-
     cout << "****Sampling Fraction Results****\n"
          << " * mu1=1 \t mu1 fraction = " << (double) counter / nExtraction << endl
          << " * mu1=2 \t mu2 fraction = " << (double) (nExtraction - counter) / nExtraction << endl << endl;
@@ -117,8 +117,8 @@ int main(){
     fitFunction->SetParName(1, "#mu");
     hGeant4->Fit(fitFunction, "Q");
     fitFunction->Draw("Same");
-
     c->SaveAs("figs/Exercise7/Geant4Sampling.pdf");
+
 
     App->Run();
 

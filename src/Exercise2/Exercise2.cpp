@@ -23,7 +23,6 @@ double RutherfordFormula(double *x, double *p){
 
 
 int main(){
-    gStyle->SetOptStat(0000);
     TApplication * App = new TApplication("T",0,NULL);
     
     //Initialization

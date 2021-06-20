@@ -1,12 +1,8 @@
 //c++ -o  Exercise5_1 Exercise5_1.cpp `root-config --glibs --cflags`
 
-#include <time.h>
 #include <iostream>
-#include <stdlib.h>
 #include <math.h>
-#include <fstream>
 #include <random>
-
 
 #include "TApplication.h"
 #include "TCanvas.h"
@@ -19,14 +15,17 @@
 
 using namespace std;
 
+//Function power 
 double functionPower(double x, int degree){
   return (double) pow(x,degree);
 }
 
+//Exact result from integral, depending on the degree of the power
 double exactIntegral(int degree){
   return (double) 1. / (1. + degree);
 }
 
+//2D extraction for the Hit or Miss Monte Carlo
 vector<double> Extraction2D(double xMin, double xMax, double yMin, double yMax){
     vector<double> result(2,0);
     random_device initSeed;
@@ -38,6 +37,7 @@ vector<double> Extraction2D(double xMin, double xMax, double yMin, double yMax){
     return result;
 }
 
+//Hit or Miss Monte Carlo returning the integral value
 double HitOrMiss(double xMin, double xMax, double yMin, double yMax, int degree, int nExtraction){
   double integral = 0;
   vector<double> extractionResult(2,0);
@@ -53,9 +53,8 @@ double HitOrMiss(double xMin, double xMax, double yMin, double yMax, int degree,
 
 int main(){
   TApplication * App = new TApplication("T",0,NULL);
-  TCanvas * c = new TCanvas();
 
-  //Obtain I approx - I exact depending on nExtraction
+  //Initialization
   int nExtractionMin = 1e1;
   int nExtractionMax = 1e5;
   int degreeMax = 6;
@@ -66,9 +65,12 @@ int main(){
   int yMin = 0;
   int yMax = 1;
 
+  //Definition of TGraphError array
+  TCanvas * c = new TCanvas();
   TGraph ** graphError;
   graphError = new TGraph*[degreeMax];
 
+  //MC looping over degrees and nExtraction
   for(int i=0; i<degreeMax; i++){
     cout << "Doing the HitOrMiss for x^" << i+1 << endl;
     graphError[i] = new TGraph();
@@ -80,11 +82,8 @@ int main(){
     }
   }
 
-
-  //Plot
+  //Plot section
   c->Divide(2,3);
-  
-
   TPad * pad = new TPad();
   for(int i=0; i<degreeMax; i++){
     c->cd(i+1);
@@ -105,20 +104,22 @@ int main(){
     graphError[i]->GetYaxis()->SetTitleOffset(0.6);
     graphError[i]->GetYaxis()->SetRangeUser(1e-4, 1);
     graphError[i]->GetYaxis()->SetLabelSize(0.06);
-
     graphError[i]->Draw("AP");
   }
   c->SaveAs("figs/Exercise5/Discrepancies.pdf");
 
-//Second part of 5.1
+  //------------------------------//
+  //************5.1.2*************//
+  //------------------------------//
+  //Initialization
   TCanvas * cVariance = new TCanvas();  
   TH1F ** histoVariance;
   histoVariance = new TH1F*[degreeMax];
-
   double nExtraction = 1e5;
   int nRepetitions = 1e2;
   int nBin = 50;
 
+  //MC repeated nRepetitions times to get the variance
   for(int i=0; i<degreeMax; i++){
     cout << "Doing the variance computation for x^" << i+1 << endl;
     histoVariance[i] = new TH1F("","", nBin, -0.02, 0.02);
@@ -128,9 +129,8 @@ int main(){
     }
   }
 
-  //Plot
+  //Plot section
   cVariance->Divide(2,3);
-  
   for(int i=0; i<degreeMax; i++){
     cVariance->cd(i+1);
     histoVariance[i]->SetTitle(Form("Variance for x^{%i}", i+1));
@@ -138,7 +138,6 @@ int main(){
     histoVariance[i]->SetFillStyle(3003);
     histoVariance[i]->SetFillColor(4);
     histoVariance[i]->SetLineWidth(2);
-
     histoVariance[i]->GetXaxis()->SetTitle("|I_{approx} - I_{exact}|");
     histoVariance[i]->GetXaxis()->SetTitleSize(0.055);
     histoVariance[i]->GetXaxis()->SetTitleOffset(0.85);
@@ -153,7 +152,6 @@ int main(){
 
 
   App->Run();
-
 
   return 0;
 }
