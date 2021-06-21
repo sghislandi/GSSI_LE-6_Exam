@@ -42,7 +42,7 @@ double SauterFormulaFit(double *x, double * par){
 //Theta extraction through Hit or Miss applied to the Sauter formula
 void thetaExtraction(TRandom3 * randomThetaX, TRandom3 * randomThetaY, vector<double> &direction){
     double x = randomThetaX->Uniform(0, M_PI);
-    double y = randomThetaY->Uniform(0., 2000.);
+    double y = randomThetaY->Uniform(0., 3000.);
     if(y < SauterFormula(x)){
         direction[1] = x;
         return;
