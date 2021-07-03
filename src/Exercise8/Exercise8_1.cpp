@@ -27,7 +27,7 @@ double SauterFormula(double theta){
     double beta = sqrt(electronEnergy * (electronEnergy + 2*eMassEnergy)) 
                     / (electronEnergy + eMassEnergy); 
     double gamma = 1 + electronEnergy / eMassEnergy;
-    double numerator = 2*sin(theta) * sin(theta);
+    double numerator = sin(theta) * sin(theta);
     double denominator = pow(1-beta*cos(theta),4);
     double lastTerm = 1 + 0.5*gamma*(gamma-1)*(gamma-2)*(1-cos(theta));
     return numerator / denominator * lastTerm;
@@ -42,7 +42,7 @@ double SauterFormulaFit(double *x, double * par){
 //Theta extraction through Hit or Miss applied to the Sauter formula
 void thetaExtraction(TRandom3 * randomThetaX, TRandom3 * randomThetaY, vector<double> &direction){
     double x = randomThetaX->Uniform(0, M_PI);
-    double y = randomThetaY->Uniform(0., 3000.);
+    double y = randomThetaY->Uniform(0., 800.);
     if(y < SauterFormula(x)){
         direction[1] = x;
         return;
@@ -125,7 +125,7 @@ int main(){
     sauterFit->SetParName(0,"Normalization");
     sauterFit->SetParName(1,"#beta");
     sauterFit->SetParName(2,"#gamma");
-    sauterFit->SetParameters(100,1.,3.);
+    sauterFit->SetParameters(50,0.93,2.78);
     hTheta->Fit("sauterFit");
     cTheta->SaveAs("figs/Exercise8/Theta.pdf");
 
