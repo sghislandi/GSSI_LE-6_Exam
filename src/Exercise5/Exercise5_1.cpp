@@ -133,7 +133,7 @@ int main(){
     graphError[i]->GetYaxis()->SetRangeUser(1e-4, 1);
     graphError[i]->GetYaxis()->SetLabelSize(0.06);
     graphError[i]->Draw("AP");
-    graphErrorMean[i]->Draw("same");
+    graphErrorMean[i]->Draw("same P");
   }
   c->SaveAs("figs/Exercise5/Discrepancies.pdf");
 
