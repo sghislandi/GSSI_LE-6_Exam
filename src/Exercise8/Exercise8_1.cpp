@@ -14,6 +14,7 @@
 #include "TAxis.h"
 #include "TRandom3.h"
 #include "TF1.h"
+#include "TStyle.h"
 #include "TGraph2D.h"
 
 using namespace std;
@@ -24,26 +25,29 @@ double SauterFormula(double theta){
     double photonEnergy = 1000.; //keV
     double bindingEnergy = 88.01; //keV
     double electronEnergy = photonEnergy - bindingEnergy;
-    double beta = sqrt(electronEnergy * (electronEnergy + 2*eMassEnergy)) 
+    double beta = sqrt(electronEnergy * (electronEnergy + 2.*eMassEnergy)) 
                     / (electronEnergy + eMassEnergy); 
-    double gamma = 1 + electronEnergy / eMassEnergy;
+    double gamma = 1. + (electronEnergy / eMassEnergy);
     double numerator = sin(theta) * sin(theta);
     double denominator = pow(1-beta*cos(theta),4);
-    double lastTerm = 1 + 0.5*gamma*(gamma-1)*(gamma-2)*(1-cos(theta));
+    double lastTerm = 1. + 0.5*gamma*(gamma-1.)*(gamma-2.)*(1.-cos(theta));
     return numerator / denominator * lastTerm;
 }
 
 //Sauter formula used for the Fit (with parameters)
 double SauterFormulaFit(double *x, double * par){
-    return par[0]*(sin(x[0])*sin(x[0])) / (pow(1-par[1]*cos(x[0]),4)) * 
-            (1 + 0.5*par[2]*(par[2] -1)*(par[2]-2)*(1-par[1]*cos(x[0])));
+    double eMassEnergy = 511.; //keV
+    double beta = sqrt(par[1] * (par[1] + 2.*eMassEnergy)) / (par[1] + eMassEnergy);
+    double gamma = 1. + (par[1] / eMassEnergy);
+    return par[0]*(sin(x[0])*sin(x[0])) / (pow(1-beta*cos(x[0]),4)) * 
+            (1. + 0.5*gamma*(gamma -1.)*(gamma-2.)*(1.-beta*cos(x[0])));
 }
 
 //Theta extraction through Hit or Miss applied to the Sauter formula
 void thetaExtraction(TRandom3 * randomThetaX, TRandom3 * randomThetaY, vector<double> &direction){
     double x = randomThetaX->Uniform(0, M_PI);
     double y = randomThetaY->Uniform(0., 800.);
-    if(y < SauterFormula(x)){
+    if(y <= SauterFormula(x)){
         direction[1] = x;
         return;
     }
@@ -58,6 +62,7 @@ void directionExtraction(vector<double> &direction, TRandom3 *randomPhi, TRandom
 
 int main(){
     TApplication * App = new TApplication("T",0,NULL);
+    gStyle->SetOptFit(1111);
 
     //Initialization
     random_device initSeedGenerator;
@@ -121,12 +126,11 @@ int main(){
     hTheta->Draw();
 
     //Fit section
-    TF1 * sauterFit = new TF1("sauterFit", SauterFormulaFit, 0, M_PI, 3);
+    TF1 * sauterFit = new TF1("sauterFit", SauterFormulaFit, 0, M_PI, 2);
     sauterFit->SetParName(0,"Normalization");
-    sauterFit->SetParName(1,"#beta");
-    sauterFit->SetParName(2,"#gamma");
-    sauterFit->SetParameters(50,0.93,2.78);
-    hTheta->Fit("sauterFit");
+    sauterFit->SetParName(1,"E_{electron}");
+    sauterFit->SetParameters(50,912);
+    hTheta->Fit("sauterFit", "L");
     cTheta->SaveAs("figs/Exercise8/Theta.pdf");
 
     //Plot section
